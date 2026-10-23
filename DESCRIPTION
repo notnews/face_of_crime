@@ -1,0 +1,21 @@
+Package: faceofcrime
+Type: Project
+Title: The Face of Crime in Prime Time
+Version: 0.1.0
+Authors@R: c(
+    person("Gaurav", "Sood", role = c("aut", "cre"), email = "gsood07@gmail.com"),
+    person("Daniel", "Trielli", role = "aut"))
+Description: Data, analysis, exhibits, and manuscript for a study of the race
+    and gender of victims and criminals depicted in three Law and Order series.
+License: CC BY 2.0
+Encoding: UTF-8
+Imports:
+    digest,
+    ggplot2,
+    rprojroot
+Suggests:
+    lintr,
+    renv,
+    styler,
+    testthat
+Config/testthat/edition: 3

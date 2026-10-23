@@ -1,0 +1,5 @@
+linters: linters_with_defaults(
+    line_length_linter = line_length_linter(120L),
+    object_name_linter = object_name_linter(styles = "snake_case"),
+    object_usage_linter = NULL
+  )
