@@ -1,0 +1,51 @@
+# Audit of *The Face of Crime in Prime Time*
+
+## Main findings
+
+The corrected analysis still shows Black characters at lower shares than several historical arrest and victimization benchmarks. Several coding defects changed numerical results, and the original build was not reproducible as written. The comparisons remain descriptive: the show and reference files cover different crimes, populations, geographies, and periods. The data do not test whether watching the shows changes beliefs.
+
+| Confirmed issue | Original | Corrected | Where it matters |
+|---|---:|---:|---|
+| New York women in the Census comparison | 76.3%, 72.2%, 71.4% in 1990, 2000, 2010 | 53.2%, 52.6%, 52.5% | Annual victim and criminal gender tables. The old code renamed the seventh of nine Census columns `men_ny`; that column is Hispanic share. |
+| Black criminal share, all coded episodes | 7.49% CI; 9.64% SVU; 10.58% Original | 7.73% CI; 9.86% SVU; 11.17% Original | Aggregate Black-criminal figures and paper. Criminal-race denominators used the victim Asian count; one Original episode also had transposed race and gender labels. |
+| Black victim share, Original, 2005 | 8.33% | 4.35% | Annual victim-race figure and table. The old annual denominator used criminal Hispanic counts. This is the largest annual change. |
+| Black criminal share, SVU, 2014 | 16.13% | 17.86% | Annual criminal-race figure and table. The annual denominator used victim Asian counts. |
+| SVU known criminal-race denominator | 434 | 436 | The new parser recognizes `1hispanic` and an Asian count after two spaces. The old parser returned zero and `NA`, respectively. |
+
+The transposed “Mushrooms” labels also change the Original Black-victim share from 9.95% to 10.42%. The paper now reports 661 episodes with murder, rape, or assault, matching the source crime fields. The original aggregate and annual R scripts are preserved in `legacy/scripts/`. To verify old values, run them in a disposable copy with the original directory layout and `basedir` set to its parent. The original aggregate script stops at `colMeans(ncvs_hisp)` because the historical NCVS CSV contains `--` markers; the baseline calculation treated these as missing in the disposable copy. The new reader declares `--` as missing without editing the source. The original PDF build also required an unavailable `apsr.bst`; the manuscript now uses the installed `plainnat` bibliography style.
+
+## What each comparison measures
+
+| Claim family | Unit and denominator | Reference quantity | Interpretation |
+|---|---|---|---|
+| Show race and gender shares | Coded character counts pooled across episodes; classified characters for that attribute are the denominator | None | Composition of the coded show characters, not unique actors, viewers, or crimes. |
+| Arrest comparisons | Same show shares | Historical UCR arrest shares or NYPD suspect shares | Difference in recorded composition across unlike offense mixtures and enforcement systems; it does not identify crime commission rates. |
+| Victim comparisons | Same show shares | Historical NCVS victimization or UCR/NYPD murder-victim shares | Difference in recorded composition; NCVS excludes homicide and its survey categories differ from the show coding. |
+| Population comparisons | Same show shares | Three Census snapshot years | Population composition is context, not a matched crime baseline. |
+
+The benchmark plots display an unweighted average across available years in each preserved historical file and name that difference in their captions. The annual tables compare values for the same calendar year where a reference value exists. The paper states the 1999–2014 window when quoting the corresponding NCVS means. No newer source vintage was substituted.
+
+## Remaining source and design limits
+
+- The “Mushrooms” source row has race and gender entered in each other’s columns for both roles. The new reader swaps those labels for that row and leaves the source file intact; one person per role is classified from the labels.
+- Twelve episode-role-attribute combinations have classified counts above the declared number of characters; the affected rows are in [`coding_discrepancies.csv`](coding_discrepancies.csv). Twenty-nine victim totals and 21 criminal totals are missing or nonnumeric. The source sheets cannot resolve all of these conflicts, so the pipeline keeps their classified category counts and reports the discrepancy.
+- SVU has one repeated season/episode identifier: season 4, episode 4 labels both “Deception” and “Lust.” Both source rows remain; the episode identifier needs verification against an independent episode list before changing either row.
+- The asterisked `Female*` entry has a `*Transgender` note. Its intended coding category is ambiguous. The analysis preserves the original exclusion rather than inferring an identity from that note. The additional 385-row SVU template is largely empty and is not an analysis input.
+- The contextual CSVs have source spreadsheets, but no documented cell ranges or extraction scripts. Hashes guarantee that this build uses the same files; they do not establish that every CSV cell matches its source publication. The audience calculation in the original `05_audience.R` depends on absent files, so its three unverified audience averages were removed from the paper.
+- This is a census of the available coded episodes, not a random sample of television programming. The paper does not attach sampling intervals to its show shares. Any generalization beyond these episodes, or causal claim about viewer beliefs, requires additional design and data.
+
+## Checks performed and gates
+
+| Check | Result |
+|---|---|
+| Source hashes and row counts | All 28 preserved source files match the manifest; 731 analysis rows partition into 194 CI, 151 Original, and 386 SVU. |
+| Parser, category sums, and denominators | Tests cover count syntax, ambiguous labels, and reconciliation of every share with its category counts. |
+| Source missingness and duplicate keys | `--` parsed as missing; missing declared totals and one duplicate key recorded. |
+| External benchmark mapping | Nine Census columns mapped by name and tested against 1990, 2000, and 2010 values. |
+| Inference and identification | No inferential estimator is used for the episode census; benchmark comparability and causal interpretation are limited as above. |
+| Figures, tables, and prose | Generated from one R pipeline; headline manuscript values are macros from the analysis. |
+| External source extraction | Untestable from the materials supplied: original source table IDs, retrieval dates, and extraction code are absent. |
+
+## Possible future data update
+
+A refresh should be a separate, reviewed commit. It would identify the exact official series and table for each comparison, state why the newer release improves measurement, save source URLs, retrieval dates, file hashes, and extraction code, then report old-vintage and new-vintage results side by side. No refresh has been made here.
