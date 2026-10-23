@@ -37,7 +37,6 @@ make check
 | `figs/`, `tabs/` | Generated exhibits, numerical results, and manuscript macros. |
 | `ms/` | Editable LaTeX manuscript, bibliography, and compiled PDF. |
 | `tests/testthat/` | Source, coding, denominator, and benchmark tests. |
-| `legacy/scripts/` | Original scripts retained for old-versus-new calculations. |
 
 The pipeline runs `scripts/01_prepare_data.R` through `scripts/04_tables.R` with `scripts/99_run_all.R`. Each stage reads a file left by its predecessor. The manuscript inputs generated tables and macros, so corrected values reach both the exhibits and prose. [`docs/path_map.csv`](docs/path_map.csv) records published old and new data paths.
 
