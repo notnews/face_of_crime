@@ -11,13 +11,30 @@ names(literature) <- c("Region", "Period", "Media", "Finding", "Citation")
 literature[] <- lapply(literature, function(column) {
   gsub("&", "\\\\&", column, fixed = TRUE)
 })
-rows <- apply(literature, 1, function(row) paste(row, collapse = " & "))
+study <- paste0(
+  literature$Citation, " \\newline ", literature$Region,
+  " \\newline ", literature$Period
+)
+rows <- paste(study, literature$Media, literature$Finding, sep = " & ")
 lines <- c(
-  "\\begin{table}[p]", "\\centering", "\\scriptsize",
-  "\\caption{Racial distribution of perpetrators and victims in earlier television studies}",
-  "\\label{tab:lit}",
-  "\\begin{tabular}{p{.12\\linewidth}p{.09\\linewidth}p{.12\\linewidth}p{.40\\linewidth}p{.12\\linewidth}}",
-  "\\toprule", "Region & Period & Media & Finding & Citation \\\\ ", "\\midrule",
-  paste0(rows, " \\\\ "), "\\bottomrule", "\\end{tabular}", "\\end{table}"
+  "\\begingroup", "\\footnotesize",
+  paste0(
+    "\\begin{longtable}{@{}",
+    ">{\\raggedright\\arraybackslash}p{.23\\linewidth}",
+    ">{\\raggedright\\arraybackslash}p{.15\\linewidth}",
+    ">{\\raggedright\\arraybackslash}p{.56\\linewidth}@{}}"
+  ),
+  "\\caption{Racial Distribution of Perpetrators and Victims on Various Television Shows}\\label{tab:lit}\\\\",
+  "\\toprule",
+  "Study and setting & Media & Key relevant findings \\\\",
+  "\\midrule", "\\endfirsthead",
+  "\\caption[]{Racial Distribution of Perpetrators and Victims on Various Television Shows (continued)}\\\\",
+  "\\toprule",
+  "Study and setting & Media & Key relevant findings \\\\",
+  "\\midrule", "\\endhead",
+  "\\midrule", "\\endfoot",
+  "\\bottomrule", "\\endlastfoot",
+  paste0(rows, " \\\\"),
+  "\\end{longtable}", "\\endgroup"
 )
 writeLines(gsub("[ \t]+(?=\n|$)", "", lines, perl = TRUE), file.path(table_dir, "lit.tex"))
