@@ -74,3 +74,23 @@ testthat::test_that("manuscript macro matches the single plotted NCVS reference"
     sprintf("\\newcommand{\\NcvsSeriousBlackPct}{%.1f}", value) %in% macros
   )
 })
+
+testthat::test_that("SI reference lines match the annual reference columns in the tables", {
+  episodes <- read_episodes(raw_dir)
+  sources <- read_benchmarks(reference_dir)
+  yearly <- estimate_shares(episodes)$yearly
+  for (role in c("victim", "criminal")) {
+    for (group in c("black", "female")) {
+      years <- unique(yearly$year[yearly$role == role & yearly$group == group])
+      reference <- yearly_reference(sources, years, role, group)
+      annual <- annual_table(yearly, sources, benchmark_catalog(), role, group)
+      column <- if (role == "victim") "NCVS serious violence" else "UCR violent arrests"
+      available <- !is.na(annual[[column]])
+      testthat::expect_equal(reference$year, annual$Year[available])
+      testthat::expect_equal(reference$share_pct, annual[[column]][available])
+      testthat::expect_equal(
+        range(reference$year), if (role == "victim") c(1999L, 2014L) else c(1999L, 2015L)
+      )
+    }
+  }
+})

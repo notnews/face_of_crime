@@ -85,21 +85,76 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
     )
 }
 
-plot_yearly_share <- function(shares, role, group) {
+yearly_reference <- function(source_tables, years, role, group) {
+  if (role == "victim") {
+    source <- if (group == "black") source_tables$ncvs_hispanic else source_tables$ncvs
+    value <- if (group == "black") {
+      source$serious_violent_victimization_nh_black
+    } else {
+      100 - source$serious_violent_victimization_male
+    }
+    label <- "NCVS Serious Violence"
+  } else {
+    source <- source_tables$ucr
+    value <- if (group == "black") source$violent_crime_perc_black else 100 - source$violent_crime_perc_men
+    label <- "UCR Violent Arrests"
+  }
+  reference <- data.frame(year = source$year, share_pct = value, label = label)
+  reference[reference$year %in% years & !is.na(reference$share_pct), ]
+}
+
+plot_yearly_share <- function(shares, source_tables, role, group) {
   points <- shares[shares$role == role & shares$group == group, ]
   points$series <- factor(points$series, levels = c("Original", "SVU", "Criminal Intent"))
   points$run <- ifelse(points$series == "Original" & points$year < 2000, "original_early", as.character(points$series))
   endpoints <- points[!is.na(points$share_pct), ]
   endpoints <- endpoints[ave(endpoints$year, endpoints$series, FUN = max) == endpoints$year, ]
-  axis_values <- if (group == "black") shares$share_pct[shares$group == group] else points$share_pct
+  reference <- yearly_reference(source_tables, unique(points$year), role, group)
+  reference_label <- reference[nrow(reference), ]
+  reference_label$label_y <- reference_label$share_pct + if (role == "victim" && group == "black") {
+    3
+  } else if (role == "criminal" && group == "female") {
+    -4
+  } else {
+    0
+  }
+  caption <- c(
+    "Colored lines: share of classified characters in episodes broadcast each year.",
+    if (role == "victim") {
+      "Gray dashed line: NCVS share of weighted serious-violent victimizations (survey estimate; SEs not shown)."
+    } else {
+      "Gray dashed line: UCR share of violent-crime arrests."
+    },
+    if (group == "black") {
+      if (role == "victim") "NCVS Black excludes Hispanics." else "UCR Black includes Hispanics."
+    }
+  )
+  axis_values <- c(
+    if (group == "black") shares$share_pct[shares$group == group] else points$share_pct,
+    reference$share_pct
+  )
   axis_max <- min(100, 10 * ceiling(round(1.1 * max(axis_values, na.rm = TRUE), 6) / 10))
   label <- paste(tools::toTitleCase(group), if (role == "victim") "victims" else "criminals")
   ggplot2::ggplot(points, ggplot2::aes(x = year, y = share_pct, colour = series, group = run)) +
+    ggplot2::geom_line(
+      data = reference, ggplot2::aes(x = year, y = share_pct), inherit.aes = FALSE,
+      colour = "#666666", linetype = "dashed", linewidth = 0.55
+    ) +
     ggplot2::geom_line(linewidth = 0.6, na.rm = TRUE) +
     ggplot2::geom_point(size = 1.8, na.rm = TRUE) +
     ggplot2::geom_text(
       data = endpoints, ggplot2::aes(x = year + 0.4, label = series),
       hjust = 0, size = 3, show.legend = FALSE
+    ) +
+    ggplot2::geom_segment(
+      data = reference_label[reference_label$label_y != reference_label$share_pct, ],
+      ggplot2::aes(x = year, y = share_pct, xend = year + 0.4, yend = label_y),
+      inherit.aes = FALSE, colour = "#666666", linewidth = 0.35
+    ) +
+    ggplot2::geom_text(
+      data = reference_label,
+      ggplot2::aes(x = year + 0.4, y = label_y, label = label),
+      inherit.aes = FALSE, colour = "#555555", hjust = 0, size = 3
     ) +
     ggplot2::scale_y_continuous(
       limits = c(0, axis_max), breaks = seq(0, axis_max, 10),
@@ -108,13 +163,13 @@ plot_yearly_share <- function(shares, role, group) {
     ggplot2::scale_x_continuous(limits = c(1989.5, 2020), breaks = seq(1990, 2015, 5)) +
     ggplot2::scale_colour_manual(values = series_colours, guide = "none") +
     ggplot2::labs(
-      title = label, x = "Broadcast year", y = "Share of classified characters (%)",
-      caption = "Each annual value pools characters across coded episodes broadcast that year."
+      title = label, x = "Broadcast year", y = "Share (%)",
+      caption = paste(caption, collapse = "\n")
     ) +
     paper_theme()
 }
 
-write_figures <- function(aggregate, yearly, benchmarks, figure_dir) {
+write_figures <- function(aggregate, yearly, benchmarks, source_tables, figure_dir) {
   plots <- list(
     all_victims_by_gender = plot_aggregate_share(aggregate, benchmarks, "victim", "female"),
     all_criminals_by_gender = plot_aggregate_share(aggregate, benchmarks, "criminal", "female"),
@@ -122,10 +177,10 @@ write_figures <- function(aggregate, yearly, benchmarks, figure_dir) {
     all_criminals_by_race = plot_aggregate_share(aggregate, benchmarks, "criminal", "black"),
     all_victims_by_race_hispanic = plot_aggregate_share(aggregate, benchmarks, "victim", "hispanic"),
     all_criminals_by_race_hispanic = plot_aggregate_share(aggregate, benchmarks, "criminal", "hispanic"),
-    all_victims_by_gender_ts = plot_yearly_share(yearly, "victim", "female"),
-    all_criminals_by_gender_ts = plot_yearly_share(yearly, "criminal", "female"),
-    all_victims_by_race_ts = plot_yearly_share(yearly, "victim", "black"),
-    all_criminals_by_race_ts = plot_yearly_share(yearly, "criminal", "black")
+    all_victims_by_gender_ts = plot_yearly_share(yearly, source_tables, "victim", "female"),
+    all_criminals_by_gender_ts = plot_yearly_share(yearly, source_tables, "criminal", "female"),
+    all_victims_by_race_ts = plot_yearly_share(yearly, source_tables, "victim", "black"),
+    all_criminals_by_race_ts = plot_yearly_share(yearly, source_tables, "criminal", "black")
   )
   for (name in names(plots)) {
     is_aggregate <- !grepl("_ts$", name)
