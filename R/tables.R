@@ -73,7 +73,7 @@ write_latex_table <- function(table, path, caption, label, role, group) {
   source_note <- if (role == "victim") {
     paste(
       "NCVS: weighted victimizations (serious = rape/sexual assault, robbery, and aggravated assault);",
-      "UCR: murder victims; NYPD: victims."
+      paste0("UCR: murder victims", if ("NYPD" %in% sources) "; NYPD: victims." else ".")
     )
   } else {
     paste(
@@ -96,7 +96,6 @@ write_latex_table <- function(table, path, caption, label, role, group) {
     ""
   }
   lines <- c(
-    "\\begin{landscape}",
     "\\begin{center}",
     paste0("\\captionof{table}{", caption, "}"),
     paste0("\\label{", label, "}"),
@@ -118,8 +117,7 @@ write_latex_table <- function(table, path, caption, label, role, group) {
       " Census: population. ", race_note,
       " Entries are percentages; -- denotes no data.}"
     ),
-    "\\end{center}",
-    "\\end{landscape}"
+    "\\end{center}"
   )
   writeLines(lines, path)
 }

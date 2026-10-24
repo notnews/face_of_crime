@@ -33,7 +33,7 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
   points$entity <- factor(points$entity, levels = rev(c(names(series_colours), reference$entity)))
   points$legend <- factor(points$legend, levels = names(point_colours))
   label <- paste(tools::toTitleCase(group), if (role == "victim") "victims" else "criminals")
-  axis_max <- min(100, 10 * ceiling(1.1 * max(points$share_pct) / 10))
+  axis_max <- min(100, 10 * ceiling(round(1.1 * max(points$share_pct), 6) / 10))
   caption <- if (role == "victim") {
     paste(
       "Colored dots pool classified victim characters.",
@@ -89,16 +89,26 @@ plot_yearly_share <- function(shares, role, group) {
   points <- shares[shares$role == role & shares$group == group, ]
   points$series <- factor(points$series, levels = c("Original", "SVU", "Criminal Intent"))
   points$run <- ifelse(points$series == "Original" & points$year < 2000, "original_early", as.character(points$series))
+  endpoints <- points[!is.na(points$share_pct), ]
+  endpoints <- endpoints[ave(endpoints$year, endpoints$series, FUN = max) == endpoints$year, ]
+  axis_values <- if (group == "black") shares$share_pct[shares$group == group] else points$share_pct
+  axis_max <- min(100, 10 * ceiling(round(1.1 * max(axis_values, na.rm = TRUE), 6) / 10))
   label <- paste(tools::toTitleCase(group), if (role == "victim") "victims" else "criminals")
   ggplot2::ggplot(points, ggplot2::aes(x = year, y = share_pct, colour = series, group = run)) +
     ggplot2::geom_line(linewidth = 0.6, na.rm = TRUE) +
     ggplot2::geom_point(size = 1.8, na.rm = TRUE) +
-    ggplot2::scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20)) +
-    ggplot2::scale_x_continuous(breaks = seq(1990, 2016, 5)) +
-    ggplot2::scale_colour_manual(values = series_colours) +
+    ggplot2::geom_text(
+      data = endpoints, ggplot2::aes(x = year + 0.4, label = series),
+      hjust = 0, size = 3, show.legend = FALSE
+    ) +
+    ggplot2::scale_y_continuous(
+      limits = c(0, axis_max), breaks = seq(0, axis_max, 10),
+      expand = ggplot2::expansion(mult = c(0.03, 0.02))
+    ) +
+    ggplot2::scale_x_continuous(limits = c(1989.5, 2020), breaks = seq(1990, 2015, 5)) +
+    ggplot2::scale_colour_manual(values = series_colours, guide = "none") +
     ggplot2::labs(
       title = label, x = "Broadcast year", y = "Share of classified characters (%)",
-      colour = NULL,
       caption = "Each annual value pools characters across coded episodes broadcast that year."
     ) +
     paper_theme()
