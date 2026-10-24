@@ -1,6 +1,8 @@
-\documentclass[12pt, letterpaper]{article}
+\documentclass[11pt, letterpaper]{article}
 \usepackage[titletoc,title]{appendix}
 \usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
 \usepackage{caption}
 \newcommand\fnote[1]{\captionsetup{font=small}\caption*{#1}}
 
@@ -21,7 +23,7 @@
 \usepackage{fullpage}		     %1-inch margins
 \usepackage{multirow}
 \usepackage{rotating}
-\setlength{\parindent}{3em}
+\setlength{\parindent}{1.5em}
 \usepackage{subcaption}
 \usepackage[T1]{fontenc}
 \usepackage{bm}
@@ -56,10 +58,9 @@ setwd(basedir)
 
 
 \begin{abstract}
-\noindent Race, gender, and crime are inextricably linked in people's minds. These linkages exist in part because of what is shown on television. We investigate the extent to which popular television programming perpetuates these stereotypical linkages. We tally the race and gender of criminals and victims in three popular series of the most successful criminal procedural franchise on television---Law \& Order. Data from episodes of \textit{Special Victims Unit} and \textit{Criminal Intent}, and seven seasons of the \textit{Original} series reveal that blacks are underrepresented as criminals and victims, while women are overrepresented as criminals, compared with the historical crime records we collected. Underrepresentation of blacks is especially dramatic, with the percentages of blacks among violent-crime arrestees and serious-violent-crime victims nearly 400\% and 200\%, respectively, of the corresponding percentages on the shows.
+\noindent Race, gender, and crime are inextricably linked in people's minds. These linkages exist in part because of what is shown on television. We investigate the extent to which popular television programming perpetuates these stereotypical linkages. We tally the race and gender of criminals and victims in three popular series of the most successful criminal procedural franchise on television---Law \& Order. Data from episodes of \textit{Special Victims Unit} and \textit{Criminal Intent}, and seven seasons of the \textit{Original} series reveal that whites are overrepresented (and blacks underrepresented) both as victims and criminals, while women are overrepresented as criminals. Underrepresentation of blacks is especially dramatic, with the percentages of blacks among violent-crime arrestees and serious-violent-crime victims nearly 400\% and 200\%, respectively, of the corresponding percentages on the shows.
 \end{abstract}
-\clearpage
-\setstretch{2}
+\setstretch{1.2}
 
 Offensive portrayals of African Americans on entertainment shows have long been the norm in the US. For instance, minstrel shows, popular in the 19th century and the first half of the 20th century, regularly portrayed African Americans as lazy and dim-witted \citep{dates1993split, toll1974blacking}. More recently, \citet{entman2001black} found that 56\% of blacks in the media were portrayed as violent compared to 11\% of the whites.
 
@@ -73,7 +74,7 @@ Studies on the extent to which blacks are overrepresented in crime news or other
 
 \input{../tabs/lit.tex}
 
-In this paper, we add to this body of work. We tally the gender and race of criminals and victims depicted in three popular series of the criminal procedural, Law \& Order. Compared to the arrest and victimization records we collected, all three series underrepresent blacks as criminals and victims and overrepresent women as criminals.
+In this paper, we add to this body of work. We tally the gender and race of criminals and victims depicted in three popular series of the criminal procedural, Law \& Order. Compared to arrest records and victim survey data, all three series overrepresent whites as both criminals and victims and women as criminals.
 
 \section*{Learning from Television}
 Mass media is an important part of the information environment for many people. Thus, what is covered in the media tends to affect what people believe \citep{gerbner1986living, shanahan1999television}. For instance, exposure to more vivid violent media causes people to think that crime and police immorality are more common in the real world \citep{riddle2010always}. Similarly, the extent to which a topic is covered on television news affects how important people think it is \citep{mccombs1972agenda, iyengar2010news, iyengar1990accessibility}.
@@ -87,7 +88,7 @@ Besides learning about the extent of crime and what kind of crime is prevalent f
 \section*{Data and Measurement}
 The data are from three Law \& Order series: Original Law \& Order series (Original), Law \& Order: Special Victims Unit (SVU), and Law \& Order: Criminal Intent (Criminal Intent). All the three shows are police procedurals set in New York City. Criminal Intent, which ran between 2001--2011, purportedly follows detectives of the `Major Case Squad,' a division of the New York Police Department (NYPD) focused on solving major crimes against rich, famous, or important people. Meanwhile SVU, which has been on television since 1999, purportedly follows detectives of the NYPD division devoted to handling ``sexually based offenses,'' the `Special Victims Unit.'
 
-All three shows have enjoyed great success.
+All three shows have enjoyed great success. At the time of data collection, the Original Law \& Order was the longest running scripted US prime time TV series on a major broadcast network, and SVU was the longest running scripted non-animated US prime time TV series then on air. Through its run, Criminal Intent drew an average of 9.3M people, Original, an average of 10.2M, and SVU, an average of 11.81M.\footnote{Based on data assembled by Austin Ogilvie at \href{https://github.com/hernamesbarbara/law_and_order}{https://github.com/hernamesbarbara/law\_and\_order} from Wikipedia and TV.com.}
 
 For the Original series, we only have data from Seasons 1 and 2 (1990--1991) and Seasons 16--20 (2005--2010).\footnote{The choice of the seasons is a reflection of what was available on streaming on Amazon Instant as of July, 2016.} In all, we have data from \OriginalEpisodeCount{} shows. For CI, we have data on \CriminalIntentEpisodeCount{} shows aired across its 10 seasons, spanning 2001--2011. And for SVU, we have data on \SvuEpisodeCount{} shows from seasons 1--17, broadcast between 1999 and 2016. In all, across the three series, we have data from \EpisodeCount{} shows, featuring \VictimCount{} victims of crime, and \CriminalCount{} criminals. We coded the race and gender of all criminals and victims whose race and gender was identified.
 
@@ -108,9 +109,9 @@ Like the UCR, the NCVS aggregates various crimes into categories. In NCVS, howev
 \section*{Results}
 To study how racial and gender breakdown of criminals and victims in Law \& Order compares to `the real world,' we compare the percentage of black and female criminals and victims on the three Law \& Order shows to a variety of baselines. In the main text, we describe the percentage of black and female criminals and victims by show, same percentages for episodes featuring murder, and SVU episodes featuring rape. (Criminal Intent and Original had fewer than 10 episodes each where rape was one of the crimes.) We compare these to average percentage of black, Hispanic, and female criminals for all crimes, rape, and murder from the UCR, and percentage of black and female victims for murder, rape, and serious violent crimes over the years available in our records. A series of graphs and tables in ~\ref{si_figs} and ~\ref{si_tabs} break data down by year, and provide other baselines like data from the census that we don't include in the main text.
 
-As Figure~\ref{fig:perp_race} and Figure~\ref{fig:perp_race_hispanic} show, criminals on all three shows were overwhelmingly white. Between \SvuCriminalWhitePct\% and \CriminalIntentCriminalWhitePct\% of the criminals in each show were white. The figures also illustrate that blacks and Hispanics are underrepresented as criminals relative to the arrest records we collected. The black criminal shares were \CriminalIntentCriminalBlackPct\% in Criminal Intent, \SvuCriminalBlackPct\% in SVU, and \OriginalCriminalBlackPct\% in Original, compared with nearly 39\% of violent-crime arrests in the UCR (see Figure~\ref{fig:perp_race}).
+As Figure~\ref{fig:perp_race} and Figure~\ref{fig:perp_race_hispanic} show, criminals on all three shows were overwhelmingly white. About 82\%--86\% of the criminals in each of the shows were white. The figures also illustrate that blacks and Hispanics are dramatically underrepresented as criminals. The percentage of black criminals in the three series is between one-fifth and one-third of the percentage of Blacks arrested for violent crimes (see Figure~\ref{fig:perp_race}).
 
-Looking at percentage of black criminals by year---all episodes broadcast in a year; generally includes episodes from two seasons---we see no discernible pattern (see Figure~\ref{fig:perp_race_ts} and Table~\ref{tab:c_race}). However, one fact deserves closer attention. The FBI approved a broader definition of rape in 2011 and began collecting UCR data under it in 2013. The new definition for the first time accounted for male rape. As we can see in Table~\ref{tab:c_race}, the percentage of rape arrestees who are black changes only modestly around that time. The gap between the shows and the arrest records remains large.
+Looking at percentage of black criminals by year---all episodes broadcast in a year; generally includes episodes from two seasons---we see no discernible pattern (see Figure~\ref{fig:perp_race_ts} and Table~\ref{tab:c_race}). However, one fact deserves closer attention. The FBI approved a change in its definition of rape in 2011, from `carnal knowledge of a female forcibly and against her will' to `Penetration, no matter how slight, of the vagina or anus with any body part or object, or oral penetration by a sex organ of another person, without the consent of the victim.' The UCR began using the new definition in 2013. The new definition for the first time accounted for male rape. As we can see in Table~\ref{tab:c_race}, the proportion of rape arrestees who are black changed by about one percentage point between 2012 and 2013. And that does not alter the substantive comparison: the gap between black criminals in SVU rape episodes and black rape arrestees in the UCR is close to 25 percentage points.
 
 \begin{figure}[!htbp]
 \centering
@@ -126,7 +127,7 @@ Looking at percentage of black criminals by year---all episodes broadcast in a y
 \label{fig:perp_race_hispanic}
 \end{figure}
 
-Not only were the perpetrators of crime overwhelmingly white, so were the victims (see Figure~\ref{fig:victim_race}). Between \OriginalVictimWhitePct\% and \CriminalIntentVictimWhitePct\% of the victims depicted in the three shows were white. Compared to Law \& Order, where about 10 percent of the victims were black, the average percentage of black victims of a serious violent crime between 1999 and 2014 was \NcvsSeriousBlackPct\%. The corresponding number for victims of sexual assault was \NcvsRapeBlackPct\%, for aggravated assault, \NcvsAssaultBlackPct\%, and for murder, \UcrMurderVictimBlackPct\% (see Figure~\ref{fig:victim_race}). Splitting the data by year and tallying the percentage of victims who were black revealed no discernible time trend across shows (see Figure~\ref{fig:victim_race_ts} and Table~\ref{tab:v_race}).
+Not only were the perpetrators of crime overwhelmingly white, so were the victims (see Figure~\ref{fig:victim_race}). About 73\%--82\% of the victims depicted in all three shows were white. Compared to Law \& Order, where only about 10 percent of the victims were black, the average percentage of black victims of a serious violent crime between 1999 and 2014 was \NcvsSeriousBlackPct\%. The corresponding number for victims of sexual assault was \NcvsRapeBlackPct\%, for aggravated assault, \NcvsAssaultBlackPct\%, and for murder, \UcrMurderVictimBlackPct\% (see Figure~\ref{fig:victim_race}). Splitting the data by year and tallying the percentage of victims who were black revealed no discernible time trend across shows (see Figure~\ref{fig:victim_race_ts} and Table~\ref{tab:v_race}).
 
 \begin{figure}[htbp]
 \centering
@@ -142,7 +143,7 @@ Not only were the perpetrators of crime overwhelmingly white, so were the victim
 \label{fig:victim_race_hispanic}
 \end{figure}
 
-Moving to gender, between \OriginalCriminalFemalePct\% and \CriminalIntentCriminalFemalePct\% of the criminals were women across the three shows (see Figure~\ref{fig:perp_sex}). Once again, there was no distinct over time pattern in percentage of criminals who were women across the three shows (see Figure~\ref{fig:perp_sex_ts} and Table~\ref{tab:c_sex}). The percentage of women among those arrested in the UCR is lower---about 11\% of homicide arrestees, 1\%--3\% of rape arrestees, and 17\%--20\% of those arrested for a violent crime. The rape-arrest series changes after the FBI's revised definition took effect in 2013 (Table~\ref{tab:c_sex}).
+Moving to gender, nearly 30\% of the criminals were women across the three shows (see Figure~\ref{fig:perp_sex}). Once again, there was no distinct over time pattern in percentage of criminals who were men across the three shows (see Figure~\ref{fig:perp_sex_ts} and Table~\ref{tab:c_sex}). The percentage of female criminals in the UCR arrest data is lower---about 11\% of homicide arrestees, 1\%--3\% of rape arrestees, and 17\%--20\% of those arrested for a violent crime. But once again, we note the change in definition of rape in the UCR in 2013. The proportion of women among rape arrestees rises by about one percentage point from 2012 to 2013 (Table~\ref{tab:c_sex}).
 
 \begin{figure}[htbp]
 \centering
@@ -151,7 +152,7 @@ Moving to gender, between \OriginalCriminalFemalePct\% and \CriminalIntentCrimin
 \label{fig:perp_sex}
 \end{figure}
 
-When we looked at the gender of victims, there was an expected sizable variation across shows, with female victims constituting roughly 40\% of all the victims on Criminal Intent and Original and just over 60\% on SVU (see Figure~\ref{fig:victim_sex}). Except for CI, where there appears to be a downward trend post 2005, there were no discernible time trends (see Figure~\ref{fig:victim_sex_ts} and Table~\ref{tab:v_sex}). In the NCVS, the percentage of victims of serious violent crime who are women is \NcvsSeriousFemalePct\%, while the percentage of female victims of rape or sexual assault is a distressing \NcvsRapeFemalePct\%; in the UCR, the percentage of female murder victims is \UcrMurderVictimFemalePct\%. As is clear in Figure~\ref{fig:victim_sex}, SVU understates the percentage of female rape victims, and all three shows show a much larger proportion of female murder victims than in the UCR.
+When we looked at the gender of victims, there was an expected sizable variation across shows, with female victims constituting roughly 40\% of all the victims on Criminal Intent and Original and just over 60\% on SVU (see Figure~\ref{fig:victim_sex}). Except for CI, where there appears to be a downward trend post 2005, there were no discernible time trends (see Figure~\ref{fig:victim_sex_ts} and Table~\ref{tab:v_sex}). In the real world, the percentage of victims of serious violent crime who are women is about \NcvsSeriousFemalePct\%, while the percentage of female victims of rape or sexual assault is a distressing \NcvsRapeFemalePct\%, and for murder it is \UcrMurderVictimFemalePct\%. As is clear in Figure~\ref{fig:victim_sex}, SVU understates the percentage of female rape victims, and all the three shows show a much larger proportion of female murder victims than in the real world.
 
 \begin{figure}[htbp]
 \centering
