@@ -1,7 +1,7 @@
 source("scripts/00_config.R")
 prepared <- readRDS(project_file("data", "build", "prepared_data.rds"))
 shares <- estimate_shares(prepared$episodes)
-benchmarks <- summarise_benchmarks(prepared$benchmarks)
+benchmarks <- matched_benchmarks(prepared$benchmarks, prepared$episodes)
 
 saveRDS(
   list(shares = shares, benchmarks = benchmarks),

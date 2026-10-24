@@ -1,12 +1,18 @@
-\begin{sidewaystable}[p]
-\centering
-\caption{Annual share of black criminal characters and historical comparisons}
+\begin{landscape}
+\begin{center}
+\captionof{table}{Annual share of black criminal characters and historical comparisons}
 \label{tab:c_race}
-\scriptsize
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{lrrrrrrrrrrrr}
+\small
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}rrrrrrrrrrrrr@{}}
 \toprule
-Year & Criminal Intent & Original & SVU & UCR all arrests & UCR violent arrests & UCR homicide arrests & UCR rape arrests & UCR assault arrests & NYPD homicide suspects & NYPD rape suspects & US Census & NY Census \\
+ & \multicolumn{3}{c}{Coded episodes} & \multicolumn{5}{c}{UCR} & \multicolumn{2}{c}{NYPD} & \multicolumn{2}{c}{Census} \\
+\cmidrule(lr){2-4}
+\cmidrule(lr){5-9}
+\cmidrule(lr){10-11}
+\cmidrule(lr){12-13}
+Year & CI & Original & SVU & All & Violent & Homicide & Rape & Assault & Homicide & Rape & US & NY \\
 \midrule
 1990 & -- & 16.7 & -- & -- & -- & -- & -- & -- & -- & -- & 12.0 & 28.8 \\
 1991 & -- & 4.2 & -- & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
@@ -30,8 +36,8 @@ Year & Criminal Intent & Original & SVU & UCR all arrests & UCR violent arrests 
 2015 & -- & -- & 16.1 & 26.6 & 36.4 & 51.1 & 28.2 & 32.1 & 62.1 & 51.2 & -- & -- \\
 2016 & -- & -- & 17.6 & -- & -- & -- & -- & -- & -- & -- & -- & -- \\
 \bottomrule
-\end{tabular}%
-}
+\end{tabular}
 \par\smallskip
-\parbox{\linewidth}{\footnotesize Show columns pool classified characters across all coded episodes broadcast that year. NCVS columns are survey-estimated victimizations; UCR and NYPD columns are recorded arrests, suspects, or victims for the named offense. Census columns describe population. The sources use different offenses and populations; missing years are shown as --.}
-\end{sidewaystable}
+\parbox{\linewidth}{\footnotesize Coded columns: Black share of classified criminal characters in episodes broadcast that year.  UCR: arrests; NYPD: suspects. Census: population. UCR and NYPD Black categories include Hispanics. Entries are percentages; -- denotes no data.}
+\end{center}
+\end{landscape}

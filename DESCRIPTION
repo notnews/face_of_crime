@@ -12,6 +12,7 @@ Encoding: UTF-8
 Imports:
     digest,
     ggplot2,
+    readxl,
     rprojroot
 Suggests:
     lintr,

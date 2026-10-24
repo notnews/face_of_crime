@@ -7,10 +7,11 @@ testthat::test_that("Census fields map to their named source columns", {
 })
 
 testthat::test_that("historical missing markers remain missing", {
-  benchmarks <- read_benchmarks(reference_dir)
-  testthat::expect_true(is.numeric(benchmarks$ncvs_hispanic$rape_nh_other))
-  testthat::expect_true(anyNA(benchmarks$ncvs_hispanic$rape_nh_other))
-  testthat::expect_equal(nrow(benchmarks$ncvs_hispanic), 22L)
+  legacy <- read_percent_table(file.path(reference_dir, "ncvs", "ncvs_hispanic.csv"))
+  rebuilt <- read_benchmarks(reference_dir)$ncvs_hispanic
+  testthat::expect_true(anyNA(legacy$rape_nh_other))
+  testthat::expect_false(anyNA(rebuilt$rape_nh_other))
+  testthat::expect_equal(nrow(rebuilt), 22L)
 })
 
 testthat::test_that("NCVS Black references exclude Hispanic respondents", {

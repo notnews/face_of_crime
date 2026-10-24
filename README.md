@@ -23,7 +23,7 @@ make restore
 make check
 ```
 
-`make check` regenerates the data products, figures, tables, and PDF, then runs `lintr` and `testthat`. `make ci-docker` runs the same checks in a standard Rocker image when Docker is available. The source files remain at their historical vintages. Their SHA-256 hashes are pinned in [`docs/source_manifest.csv`](docs/source_manifest.csv).
+`make check` regenerates the data products, figures, tables, and PDF, then runs `lintr` and `testthat`. `make ci-docker` runs the same checks in a standard Rocker image when Docker is available. The analysis retains the historical survey years and pins a BJS NCVS API response for them. Source SHA-256 hashes are in [`docs/source_manifest.csv`](docs/source_manifest.csv).
 
 ## Layout
 
