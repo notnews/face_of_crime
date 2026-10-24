@@ -2,9 +2,9 @@
 "ncvs","serious_violent_victimization_male","victim","female","NCVS serious violence",1993,2014,22,46.1136363636364
 "ncvs","rape_sexual_assault_male","victim","female","NCVS rape/sexual assault",1993,2014,22,89.7181818181818
 "ncvs","aggravated_assault_male","victim","female","NCVS aggravated assault",1993,2014,22,39.35
-"ncvs","serious_violent_victimization_black","victim","black","NCVS serious violence",1993,2014,22,19.1909090909091
-"ncvs","rape_sexual_assault_black","victim","black","NCVS rape/sexual assault",1993,2014,22,14.3636363636364
-"ncvs","aggravated_assault_black","victim","black","NCVS aggravated assault",1993,2014,22,18.5090909090909
+"ncvs_hispanic","serious_violent_victimization_nh_black","victim","black","NCVS serious violence",1993,2014,22,18.4772727272727
+"ncvs_hispanic","rape_nh_black","victim","black","NCVS rape/sexual assault",1993,2014,22,13.9909090909091
+"ncvs_hispanic","aggravated_assault_nh_black","victim","black","NCVS aggravated assault",1993,2014,22,17.9136363636364
 "murder_victims","murder_victim_men","victim","female","UCR murder victims",1995,2015,21,22.6190476190476
 "murder_victims","murder_victim_black","victim","black","UCR murder victims",1995,2015,21,48.7142857142857
 "ucr","all_crime_perc_men","criminal","female","UCR all arrests",1995,2015,21,23.8142857142857

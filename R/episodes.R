@@ -97,7 +97,8 @@ read_episodes <- function(raw_dir) {
   rows$episode <- as.character(rows$episode)
   rows$year <- as.integer(rows$year)
   rows$is_murder <- grepl("murder", rows$crime, ignore.case = TRUE)
-  rows$is_rape <- grepl("rape", rows$crime, ignore.case = TRUE)
+  rows$is_rape <- grepl("rape", rows$crime, ignore.case = TRUE) &
+    !grepl("false rape", rows$crime, ignore.case = TRUE)
   rows$is_assault <- grepl("assault", rows$crime, ignore.case = TRUE)
   rows
 }

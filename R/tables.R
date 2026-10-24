@@ -44,9 +44,11 @@ write_latex_table <- function(table, path, caption, label) {
     "}",
     "\\par\\smallskip",
     paste0(
-      "\\parbox{\\linewidth}{\\footnotesize Values are percentages of classified characters",
-      " in the shows or percentages reported by the historical comparison files.",
-      " Missing years are shown as --.}"
+      "\\parbox{\\linewidth}{\\footnotesize Show columns pool classified characters across",
+      " all coded episodes broadcast that year. NCVS columns are survey-estimated victimizations;",
+      " UCR and NYPD columns are recorded arrests, suspects, or victims for the named offense.",
+      " Census columns describe population. The sources use different offenses and populations;",
+      " missing years are shown as --.}"
     ),
     "\\end{sidewaystable}"
   )
@@ -82,18 +84,17 @@ write_macros <- function(aggregate, benchmarks, episodes, source_tables, path) {
       }
     }
   }
-  lookup <- function(source, column, years = NULL, inverse = FALSE) {
+  lookup <- function(source, column, inverse = FALSE) {
     values <- source_tables[[source]]
-    if (!is.null(years)) values <- values[values$year %in% years, ]
     result <- values[[column]]
     if (inverse) result <- 100 - result
     sprintf("%.1f", mean(result, na.rm = TRUE))
   }
   macros <- c(
     macros,
-    macro_line("NcvsSeriousBlackPct", lookup("ncvs", "serious_violent_victimization_black", 1999:2014)),
-    macro_line("NcvsRapeBlackPct", lookup("ncvs", "rape_sexual_assault_black", 1999:2014)),
-    macro_line("NcvsAssaultBlackPct", lookup("ncvs", "aggravated_assault_black", 1999:2014)),
+    macro_line("NcvsSeriousBlackPct", lookup("ncvs_hispanic", "serious_violent_victimization_nh_black")),
+    macro_line("NcvsRapeBlackPct", lookup("ncvs_hispanic", "rape_nh_black")),
+    macro_line("NcvsAssaultBlackPct", lookup("ncvs_hispanic", "aggravated_assault_nh_black")),
     macro_line("UcrMurderVictimBlackPct", lookup("murder_victims", "murder_victim_black")),
     macro_line("NcvsSeriousFemalePct", lookup("ncvs", "serious_violent_victimization_male", inverse = TRUE)),
     macro_line("NcvsRapeFemalePct", lookup("ncvs", "rape_sexual_assault_male", inverse = TRUE)),
