@@ -88,9 +88,9 @@ write_latex_table <- function(table, path, caption, label, role, group) {
   }
   race_note <- if (group == "black") {
     if ("NCVS" %in% sources) {
-      "NCVS Black excludes Hispanics; UCR and NYPD Black categories include Hispanics."
+      "NCVS and NYPD Black exclude Hispanics; UCR Black includes Hispanics."
     } else {
-      "UCR and NYPD Black categories include Hispanics."
+      "NYPD Black excludes Hispanics; UCR Black includes Hispanics."
     }
   } else {
     ""

@@ -17,6 +17,10 @@
 "ucr","homicides_perc_black","criminal","black","UCR homicide arrests",1999,2015,17,49.791924633315
 "ucr","rape_perc_black","criminal","black","UCR rape arrests",1999,2015,17,32.6839699516611
 "ucr","assault_perc_black","criminal","black","UCR assault arrests",1999,2015,17,33.7434679264044
+"nyc","homicides_black_victim","victim","black","NYPD homicide victims",2008,2015,8,62.2381807301017
+"nyc","rapes_black_victim","victim","black","NYPD rape victims",2008,2015,8,39.5253964605838
+"nyc","homicides_black_suspect","criminal","black","NYPD homicide suspects",2008,2015,8,58.6666666666667
+"nyc","rapes_black_suspect","criminal","black","NYPD rape suspects",2008,2015,8,51.2688041331105
 "ncvs_hispanic","rape_hispanic","victim","hispanic","NCVS rape/sexual assault",1999,2014,16,10.1634616694196
 "ncvs_hispanic","serious_violent_victimization_hispanic","victim","hispanic","NCVS serious violence",1999,2014,16,14.1881930403684
 "ncvs_hispanic","aggravated_assault_hispanic","victim","hispanic","NCVS aggravated assault",1999,2014,16,13.0629706577743

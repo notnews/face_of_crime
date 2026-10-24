@@ -14,6 +14,7 @@ read_benchmarks <- function(reference_dir) {
   ncvs_annual <- ncvs_annual_shares(ncvs_records)
   ucr_counts <- read_ucr_arrest_counts(file.path(reference_dir, "ucr", "race_gender_criminals.xlsx"))
   murder_victim_counts <- read_ucr_murder_victim_counts(file.path(reference_dir, "ucr", "Murder victim data.xlsx"))
+  nypd_counts <- read_nypd_race_counts(file.path(reference_dir, "ny_enforcement"))
   census <- read_percent_table(file.path(reference_dir, "census", "census.csv"))
   names(census) <- c(
     "year", "white_us", "black_us", "men_us", "white_ny",
@@ -27,6 +28,7 @@ read_benchmarks <- function(reference_dir) {
     ncvs_records = ncvs_records,
     ucr_counts = ucr_counts,
     murder_victim_counts = murder_victim_counts,
+    nypd_counts = nypd_counts,
     ucr = ucr_annual_shares(ucr_counts),
     ucr_hispanic = read_percent_table(file.path(reference_dir, "ucr", "race_gender_criminals_hispanic.csv")),
     murder_victims = murder_victim_annual_shares(murder_victim_counts),
@@ -90,7 +92,7 @@ benchmark_catalog <- function() {
 
 pooled_benchmarks <- function(benchmarks, episodes) {
   catalog <- benchmark_catalog()
-  catalog <- catalog[!catalog$source %in% c("census", "nyc"), ]
+  catalog <- catalog[catalog$source != "census", ]
   show_years <- sort(unique(episodes$year))
   rows <- lapply(seq_len(nrow(catalog)), function(i) {
     item <- catalog[i, ]
@@ -100,7 +102,8 @@ pooled_benchmarks <- function(benchmarks, episodes) {
       ncvs_hispanic = benchmarks$ncvs_records$year,
       ucr = benchmarks$ucr_counts$year,
       ucr_hispanic = benchmarks$ucr_counts$year[!is.na(benchmarks$ucr_counts$hispanic)],
-      murder_victims = benchmarks$murder_victim_counts$year
+      murder_victims = benchmarks$murder_victim_counts$year,
+      nyc = benchmarks$nypd_counts$year
     )
     years <- intersect(show_years, unique(available))
     if (length(years) == 0L) return(NULL)
@@ -120,6 +123,10 @@ pooled_benchmarks <- function(benchmarks, episodes) {
         paste0("victim_", if (item$group == "black") "nh_black" else "hispanic")
       }
       value <- ncvs_share(benchmarks$ncvs_records, years, offense, group)$share_pct
+    } else if (source == "nyc") {
+      offense <- if (grepl("homicides", item$column)) "homicide" else "rape"
+      nypd_role <- if (item$role == "victim") "victim" else "suspect"
+      value <- pool_nypd_share(benchmarks$nypd_counts, years, offense, nypd_role)
     } else {
       counts <- if (source == "murder_victims") {
         benchmarks$murder_victim_counts
