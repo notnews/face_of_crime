@@ -77,7 +77,12 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
       title = label, x = "Share (%)", y = NULL,
       caption = caption
     ) +
-    paper_theme()
+    paper_theme() +
+    ggplot2::theme(
+      panel.grid.major.y = ggplot2::element_line(
+        colour = "#D9D9D9", linewidth = 0.25, linetype = "dotted"
+      )
+    )
 }
 
 plot_yearly_share <- function(shares, role, group) {
