@@ -1,49 +1,62 @@
-testthat::test_that("aggregate plots use only all-episode show shares", {
+testthat::test_that("main figure dots use each show's broadcast-year reference counts", {
   episodes <- read_episodes(raw_dir)
+  sources <- read_benchmarks(reference_dir)
   shares <- estimate_shares(episodes)$aggregate
-  benchmarks <- summarise_benchmarks(read_benchmarks(reference_dir))
+  benchmarks <- matched_benchmarks(sources, episodes)
 
-  testthat::expect_true(all(shares$crime_group == "all"))
   for (role in c("victim", "criminal")) {
     for (group in c("female", "black", "hispanic")) {
       plot <- plot_aggregate_share(shares, benchmarks, role, group)
-      show <- plot$data[plot$data$comparison == "Coded Episodes", ]
+      show <- plot$data[as.character(plot$data$entity) == "Coded Episodes", ]
       expected <- shares[shares$role == role & shares$group == group, ]
       testthat::expect_equal(nrow(show), 3L)
-      testthat::expect_equal(as.character(show$entity), expected$series)
+      testthat::expect_equal(as.character(show$series), expected$series)
       testthat::expect_equal(show$share_pct, expected$share_pct)
     }
   }
+
+  ci <- benchmarks[
+    benchmarks$series == "Criminal Intent" & benchmarks$source == "ncvs_hispanic" &
+      benchmarks$column == "serious_violent_victimization_nh_black",
+  ]
+  expected <- ncvs_share(sources$ncvs_records, 2001:2011, "serious_violent", "victim_nh_black")
+  testthat::expect_equal(ci$share_pct, expected$share_pct)
+  testthat::expect_equal(ci$n_years, 11L)
+  testthat::expect_gt(ci$share_pct, 19)
+  testthat::expect_lt(ci$share_pct, 21)
 })
 
-testthat::test_that("NCVS rape point is a victimization share", {
+testthat::test_that("female offender NCVS dot is an incident share", {
+  episodes <- read_episodes(raw_dir)
   sources <- read_benchmarks(reference_dir)
-  benchmarks <- summarise_benchmarks(sources)
-  shares <- estimate_shares(read_episodes(raw_dir))$aggregate
-  plot <- plot_aggregate_share(shares, benchmarks, "victim", "female")
-  rape <- plot$data[grepl("NCVS rape/sexual assault", plot$data$entity, fixed = TRUE), ]
-
-  testthat::expect_equal(nrow(rape), 1L)
-  testthat::expect_match(as.character(rape$entity), "victimizations")
-  testthat::expect_equal(rape$share_pct, mean(100 - sources$ncvs$rape_sexual_assault_male))
-  testthat::expect_equal(round(rape$share_pct, 1), 89.7)
+  benchmarks <- matched_benchmarks(sources, episodes)
+  female <- benchmarks[benchmarks$column == "serious_violent_offender_female_only", ]
+  testthat::expect_equal(nrow(female), 3L)
+  testthat::expect_true(all(female$share_pct > 12 & female$share_pct < 14))
+  testthat::expect_match(female$label[1], "female-only offender")
+  testthat::expect_equal(
+    female$share_pct[female$series == "Criminal Intent"],
+    ncvs_share(sources$ncvs_records, 2001:2011, "serious_violent", "offender_female_only")$share_pct
+  )
 })
 
-testthat::test_that("manuscript NCVS race values match plotted years", {
+testthat::test_that("manuscript macros bracket plotted NCVS values", {
   episodes <- read_episodes(raw_dir)
   sources <- read_benchmarks(reference_dir)
   shares <- estimate_shares(episodes)$aggregate
-  benchmarks <- summarise_benchmarks(sources)
+  benchmarks <- matched_benchmarks(sources, episodes)
   path <- tempfile(fileext = ".tex")
-  write_macros(shares, benchmarks, episodes, sources, path)
+  write_macros(shares, benchmarks, episodes, path)
   macros <- readLines(path)
 
-  for (pair in list(
-    c("NcvsSeriousBlackPct", "serious_violent_victimization_nh_black"),
-    c("NcvsRapeBlackPct", "rape_nh_black"),
-    c("NcvsAssaultBlackPct", "aggravated_assault_nh_black")
-  )) {
-    expected <- sprintf("\\newcommand{\\%s}{%.1f}", pair[1], mean(sources$ncvs_hispanic[[pair[2]]]))
-    testthat::expect_true(expected %in% macros)
-  }
+  values <- benchmarks$share_pct[
+    benchmarks$source == "ncvs_hispanic" &
+      benchmarks$column == "serious_violent_victimization_nh_black"
+  ]
+  testthat::expect_true(
+    sprintf("\\newcommand{\\NcvsSeriousBlackLowPct}{%.1f}", min(values)) %in% macros
+  )
+  testthat::expect_true(
+    sprintf("\\newcommand{\\NcvsSeriousBlackHighPct}{%.1f}", max(values)) %in% macros
+  )
 })

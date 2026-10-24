@@ -26,7 +26,7 @@ ci-docker:
 	docker run --rm --platform linux/amd64 -v "$(CURDIR):/project" -w /project \
 		-v face_of_crime_renv_cache:/root/.cache/R/renv \
 		-e RENV_CONFIG_REPOS_OVERRIDE=https://packagemanager.posit.co/cran/latest \
-		rocker/verse:4.6.0 bash -c "tlmgr install latexmk appendix booktabs caption chngcntr bm fancyhdr lmodern multirow natbib rotating sectsty setspace subcaption && make restore check"
+		rocker/verse:4.6.0 bash -c "tlmgr install latexmk appendix booktabs caption chngcntr bm fancyhdr lmodern multirow natbib pdflscape sectsty setspace subcaption && make restore check"
 
 clean:
 	cd ms && latexmk -C face_of_crime.tex

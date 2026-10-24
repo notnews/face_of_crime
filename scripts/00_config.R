@@ -1,5 +1,7 @@
 source(file.path(rprojroot::find_root(rprojroot::has_file("DESCRIPTION")), "R", "paths.R"))
 source(project_file("R", "episodes.R"))
+source(project_file("R", "ncvs.R"))
+source(project_file("R", "ucr.R"))
 source(project_file("R", "benchmarks.R"))
 source(project_file("R", "analysis.R"))
 source(project_file("R", "figures.R"))

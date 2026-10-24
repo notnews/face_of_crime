@@ -1,32 +1,67 @@
-"source","column","role","group","label","first_year","last_year","n_years","mean_pct"
-"ncvs","serious_violent_victimization_male","victim","female","NCVS serious violence",1993,2014,22,46.1136363636364
-"ncvs","rape_sexual_assault_male","victim","female","NCVS rape/sexual assault",1993,2014,22,89.7181818181818
-"ncvs","aggravated_assault_male","victim","female","NCVS aggravated assault",1993,2014,22,39.35
-"ncvs_hispanic","serious_violent_victimization_nh_black","victim","black","NCVS serious violence",1993,2014,22,18.4772727272727
-"ncvs_hispanic","rape_nh_black","victim","black","NCVS rape/sexual assault",1993,2014,22,13.9909090909091
-"ncvs_hispanic","aggravated_assault_nh_black","victim","black","NCVS aggravated assault",1993,2014,22,17.9136363636364
-"murder_victims","murder_victim_men","victim","female","UCR murder victims",1995,2015,21,22.6190476190476
-"murder_victims","murder_victim_black","victim","black","UCR murder victims",1995,2015,21,48.7142857142857
-"ucr","all_crime_perc_men","criminal","female","UCR all arrests",1995,2015,21,23.8142857142857
-"ucr","violent_crime_perc_men","criminal","female","UCR violent arrests",1995,2015,21,18.0190476190476
-"ucr","homicides_perc_men","criminal","female","UCR homicide arrests",1995,2015,21,10.9714285714286
-"ucr","rape_perc_men","criminal","female","UCR rape arrests",1995,2015,21,1.42380952380952
-"ucr","assault_perc_men","criminal","female","UCR assault arrests",1995,2015,21,20.9142857142857
-"ucr","all_crime_perc_black","criminal","black","UCR all arrests",1995,2015,21,28.3238095238095
-"ucr","violent_crime_perc_black","criminal","black","UCR violent arrests",1995,2015,21,38.9285714285714
-"ucr","homicides_perc_black","criminal","black","UCR homicide arrests",1995,2015,21,50.752380952381
-"ucr","rape_perc_black","criminal","black","UCR rape arrests",1995,2015,21,34.0714285714286
-"ucr","assault_perc_black","criminal","black","UCR assault arrests",1995,2015,21,34.4142857142857
-"nyc","homicides_black_victim","victim","black","NYPD homicide victims",2008,2015,8,62.2
-"nyc","rapes_black_victim","victim","black","NYPD rape victims",2008,2015,8,39.575
-"nyc","homicides_black_suspect","criminal","black","NYPD homicide suspects",2008,2015,8,58.55
-"nyc","rapes_black_suspect","criminal","black","NYPD rape suspects",2008,2015,8,51.325
-"census","men_us","population","female","US Census",1990,2010,3,51
-"census","men_ny","population","female","NY Census",1990,2010,3,52.7666666666667
-"census","black_us","population","black","US Census",1990,2010,3,12.3
-"census","black_ny","population","black","NY Census",1990,2010,3,26.9666666666667
-"ncvs_hispanic","rape_hispanic","victim","hispanic","NCVS rape/sexual assault",1993,2014,22,10.2863636363636
-"ncvs_hispanic","serious_violent_victimization_hispanic","victim","hispanic","NCVS serious violence",1993,2014,22,13.7681818181818
-"ucr_hispanic","all_crime_perc_hispanic","criminal","hispanic","UCR all arrests",2013,2015,3,17.9666666666667
-"ucr_hispanic","homicides_perc_hispanic","criminal","hispanic","UCR homicide arrests",2013,2015,3,21.3666666666667
-"ucr_hispanic","rape_perc_hispanic","criminal","hispanic","UCR rape arrests",2013,2015,3,24.9
+"series","source","column","role","group","label","first_year","last_year","n_years","share_pct"
+"Criminal Intent","ncvs","serious_violent_victimization_male","victim","female","NCVS serious violence",2001,2011,11,48.2518040301101
+"Criminal Intent","ncvs","rape_sexual_assault_male","victim","female","NCVS rape/sexual assault",2001,2011,11,89.7205668476491
+"Criminal Intent","ncvs","aggravated_assault_male","victim","female","NCVS aggravated assault",2001,2011,11,41.8552766613904
+"Criminal Intent","ncvs_hispanic","serious_violent_victimization_nh_black","victim","black","NCVS serious violence",2001,2011,11,19.8597771958214
+"Criminal Intent","ncvs_hispanic","rape_nh_black","victim","black","NCVS rape/sexual assault",2001,2011,11,16.9744627553616
+"Criminal Intent","ncvs_hispanic","aggravated_assault_nh_black","victim","black","NCVS aggravated assault",2001,2011,11,19.9907636568377
+"Criminal Intent","murder_victims","murder_victim_men","victim","female","UCR murder victims",2001,2011,11,22.1357740206613
+"Criminal Intent","murder_victims","murder_victim_black","victim","black","UCR murder victims",2001,2011,11,48.3481345312379
+"Criminal Intent","ucr","all_crime_perc_men","criminal","female","UCR all arrests",2001,2011,11,24.1496357344279
+"Criminal Intent","ucr","violent_crime_perc_men","criminal","female","UCR violent arrests",2001,2011,11,18.2184979883124
+"Criminal Intent","ucr","homicides_perc_men","criminal","female","UCR homicide arrests",2001,2011,11,10.9848088502478
+"Criminal Intent","ucr","rape_perc_men","criminal","female","UCR rape arrests",2001,2011,11,1.28011813275376
+"Criminal Intent","ucr","assault_perc_men","criminal","female","UCR assault arrests",2001,2011,11,21.2013720554895
+"Criminal Intent","ucr","all_crime_perc_black","criminal","black","UCR all arrests",2001,2011,11,27.8016684358307
+"Criminal Intent","ucr","violent_crime_perc_black","criminal","black","UCR violent arrests",2001,2011,11,38.3456293315448
+"Criminal Intent","ucr","homicides_perc_black","criminal","black","UCR homicide arrests",2001,2011,11,49.299556608822
+"Criminal Intent","ucr","rape_perc_black","criminal","black","UCR rape arrests",2001,2011,11,32.9573666302547
+"Criminal Intent","ucr","assault_perc_black","criminal","black","UCR assault arrests",2001,2011,11,33.7642012487714
+"Criminal Intent","ncvs_hispanic","rape_hispanic","victim","hispanic","NCVS rape/sexual assault",2001,2011,11,10.2003078642297
+"Criminal Intent","ncvs_hispanic","serious_violent_victimization_hispanic","victim","hispanic","NCVS serious violence",2001,2011,11,13.7946342972654
+"Criminal Intent","ncvs","serious_violent_offender_female_only","criminal","female","NCVS female-only offender incidents",2001,2011,11,12.8221317544565
+"Original","ncvs","serious_violent_victimization_male","victim","female","NCVS serious violence",2005,2010,6,48.0794455880722
+"Original","ncvs","rape_sexual_assault_male","victim","female","NCVS rape/sexual assault",2005,2010,6,88.9040897150966
+"Original","ncvs","aggravated_assault_male","victim","female","NCVS aggravated assault",2005,2010,6,42.4184145573188
+"Original","ncvs_hispanic","serious_violent_victimization_nh_black","victim","black","NCVS serious violence",2005,2010,6,21.0896498686819
+"Original","ncvs_hispanic","rape_nh_black","victim","black","NCVS rape/sexual assault",2005,2010,6,15.3772703257587
+"Original","ncvs_hispanic","aggravated_assault_nh_black","victim","black","NCVS aggravated assault",2005,2010,6,22.362774896207
+"Original","murder_victims","murder_victim_men","victim","female","UCR murder victims",2005,2010,6,21.7631852900237
+"Original","murder_victims","murder_victim_black","victim","black","UCR murder victims",2005,2010,6,48.7408325827846
+"Original","ucr","all_crime_perc_men","criminal","female","UCR all arrests",2005,2010,6,24.4975289504549
+"Original","ucr","violent_crime_perc_men","criminal","female","UCR violent arrests",2005,2010,6,18.4033647484038
+"Original","ucr","homicides_perc_men","criminal","female","UCR homicide arrests",2005,2010,6,10.6929408148629
+"Original","ucr","rape_perc_men","criminal","female","UCR rape arrests",2005,2010,6,1.24017621491155
+"Original","ucr","assault_perc_men","criminal","female","UCR assault arrests",2005,2010,6,21.4768818782434
+"Original","ucr","all_crime_perc_black","criminal","black","UCR all arrests",2005,2010,6,28.0961039451039
+"Original","ucr","violent_crime_perc_black","criminal","black","UCR violent arrests",2005,2010,6,38.9326962914511
+"Original","ucr","homicides_perc_black","criminal","black","UCR homicide arrests",2005,2010,6,49.6837944664032
+"Original","ucr","rape_perc_black","criminal","black","UCR rape arrests",2005,2010,6,32.5350484602389
+"Original","ucr","assault_perc_black","criminal","black","UCR assault arrests",2005,2010,6,34.0161549206038
+"Original","ncvs_hispanic","rape_hispanic","victim","hispanic","NCVS rape/sexual assault",2005,2010,6,9.73389019984126
+"Original","ncvs_hispanic","serious_violent_victimization_hispanic","victim","hispanic","NCVS serious violence",2005,2010,6,14.4168280584756
+"Original","ncvs","serious_violent_offender_female_only","criminal","female","NCVS female-only offender incidents",2005,2010,6,13.8607279340734
+"SVU","ncvs","serious_violent_victimization_male","victim","female","NCVS serious violence",1999,2014,16,47.1101957931257
+"SVU","ncvs","rape_sexual_assault_male","victim","female","NCVS rape/sexual assault",1999,2014,16,88.7322048939458
+"SVU","ncvs","aggravated_assault_male","victim","female","NCVS aggravated assault",1999,2014,16,40.2335427274219
+"SVU","ncvs_hispanic","serious_violent_victimization_nh_black","victim","black","NCVS serious violence",1999,2014,16,19.1097977406997
+"SVU","ncvs_hispanic","rape_nh_black","victim","black","NCVS rape/sexual assault",1999,2014,16,15.006455787967
+"SVU","ncvs_hispanic","aggravated_assault_nh_black","victim","black","NCVS aggravated assault",1999,2014,16,18.967209418248
+"SVU","murder_victims","murder_victim_men","victim","female","UCR murder victims",1999,2015,17,22.2963036867699
+"SVU","murder_victims","murder_victim_black","victim","black","UCR murder victims",1999,2015,17,48.8406997878773
+"SVU","ucr","all_crime_perc_men","criminal","female","UCR all arrests",1999,2015,17,24.4398436380461
+"SVU","ucr","violent_crime_perc_men","criminal","female","UCR violent arrests",1999,2015,17,18.5166727751253
+"SVU","ucr","homicides_perc_men","criminal","female","UCR homicide arrests",1999,2015,17,11.1039051869937
+"SVU","ucr","rape_perc_men","criminal","female","UCR rape arrests",1999,2015,17,1.46645833620132
+"SVU","ucr","assault_perc_men","criminal","female","UCR assault arrests",1999,2015,17,21.447886133237
+"SVU","ucr","all_crime_perc_black","criminal","black","UCR all arrests",1999,2015,17,27.8349044573097
+"SVU","ucr","violent_crime_perc_black","criminal","black","UCR violent arrests",1999,2015,17,38.2237638820436
+"SVU","ucr","homicides_perc_black","criminal","black","UCR homicide arrests",1999,2015,17,49.791924633315
+"SVU","ucr","rape_perc_black","criminal","black","UCR rape arrests",1999,2015,17,32.6839699516611
+"SVU","ucr","assault_perc_black","criminal","black","UCR assault arrests",1999,2015,17,33.7434679264044
+"SVU","ncvs_hispanic","rape_hispanic","victim","hispanic","NCVS rape/sexual assault",1999,2014,16,10.1634616694196
+"SVU","ncvs_hispanic","serious_violent_victimization_hispanic","victim","hispanic","NCVS serious violence",1999,2014,16,14.1881930403684
+"SVU","ucr_hispanic","all_crime_perc_hispanic","criminal","hispanic","UCR all arrests",2013,2015,3,18.0947401680231
+"SVU","ucr_hispanic","homicides_perc_hispanic","criminal","hispanic","UCR homicide arrests",2013,2015,3,21.3276916919206
+"SVU","ucr_hispanic","rape_perc_hispanic","criminal","hispanic","UCR rape arrests",2013,2015,3,25.2157686027525
+"SVU","ncvs","serious_violent_offender_female_only","criminal","female","NCVS female-only offender incidents",1999,2014,16,12.4447529245606

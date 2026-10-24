@@ -10,61 +10,62 @@ paper_theme <- function() {
     )
 }
 
-aggregate_colours <- c(
-  "Coded Episodes" = "#D55E00",
-  "Reference Data" = "#555555"
+series_colours <- c(
+  "Original" = "#0072B2",
+  "SVU" = "#D55E00",
+  "Criminal Intent" = "#009E73"
 )
 
 plot_aggregate_share <- function(shares, benchmarks, role, group) {
   show <- shares[shares$role == role & shares$group == group & shares$crime_group == "all", ]
-  show$entity <- show$series
-  show$comparison <- "Coded Episodes"
+  show$entity <- "Coded Episodes"
 
   reference <- benchmarks[benchmarks$role == role & benchmarks$group == group, ]
-  reference <- reference[reference$source != "census", ]
-  reference$entity <- ifelse(
-    reference$source %in% c("ncvs", "ncvs_hispanic"),
-    paste0(reference$label, "\nvictimizations"),
-    reference$label
-  )
-  reference$comparison <- "Reference Data"
-  reference$share_pct <- reference$mean_pct
+  reference$entity <- tools::toTitleCase(reference$label)
 
   points <- rbind(
-    show[c("entity", "comparison", "share_pct")],
-    reference[c("entity", "comparison", "share_pct")]
+    show[c("series", "entity", "share_pct")],
+    reference[c("series", "entity", "share_pct")]
   )
   points$entity <- factor(points$entity, levels = rev(unique(points$entity)))
-  points$comparison <- factor(points$comparison, levels = names(aggregate_colours))
+  points$series <- factor(points$series, levels = names(series_colours))
   label <- paste(tools::toTitleCase(group), if (role == "victim") "victims" else "criminals")
-
-  ggplot2::ggplot(points, ggplot2::aes(x = entity, y = share_pct, colour = comparison)) +
-    ggplot2::geom_point(size = 2.7) +
-    ggplot2::coord_flip() +
-    ggplot2::scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20)) +
-    ggplot2::scale_colour_manual(values = aggregate_colours) +
-    ggplot2::labs(
-      title = label, x = NULL, y = "Share (%)",
-      colour = NULL,
-      caption = if (role == "victim") {
-        paste(
-          "Show dots pool all coded victims with classified race or gender.",
-          "NCVS: survey-estimated victimizations (no SEs in file); UCR/NYPD: recorded victims.",
-          if (group == "black") {
-            "NCVS Black shares exclude Hispanics; reference means span offenses and years."
-          } else {
-            "References average available yearly shares; offenses and periods differ."
-          },
-          sep = "\n"
-        )
+  caption <- if (role == "victim") {
+    paste(
+      "Coded dots pool classified victim characters.",
+      "NCVS dots pool weighted victimizations (survey estimates; SEs not shown); UCR dots pool murder victims.",
+      "Each reference uses available years in that show's coded broadcast years.",
+      if (group == "black") "NCVS Black excludes Hispanics; UCR Black includes Hispanics." else "",
+      sep = "\n"
+    )
+  } else if (group == "female") {
+    paste(
+      "Coded dots pool classified criminal characters. UCR dots pool arrests.",
+      "NCVS: victim-reported female-only offender incidents among those with known offender sex (SEs not shown);",
+      "mixed-sex groups remain in the denominator.",
+      "Each reference uses available years in that show's coded broadcast years.",
+      sep = "\n"
+    )
+  } else {
+    paste(
+      "Coded dots pool classified criminal characters. UCR dots pool arrests.",
+      "Each reference uses available years in that show's coded broadcast years.",
+      if (group == "hispanic") {
+        "UCR ethnicity counts begin in 2013 and cover arrests with reported ethnicity."
       } else {
-        paste(
-          "Show dots pool all coded criminals with classified race or gender.",
-          "UCR/NYPD dots are arrest or suspect shares averaged over available years.",
-          "Offenses and periods differ.",
-          sep = "\n"
-        )
-      }
+        "UCR Black includes Hispanics."
+      },
+      sep = "\n"
+    )
+  }
+
+  ggplot2::ggplot(points, ggplot2::aes(x = share_pct, y = entity, colour = series)) +
+    ggplot2::geom_point(size = 2.5, position = ggplot2::position_dodge(width = 0.55)) +
+    ggplot2::scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, 20)) +
+    ggplot2::scale_colour_manual(values = series_colours) +
+    ggplot2::labs(
+      title = label, x = "Share (%)", y = NULL, colour = NULL,
+      caption = caption
     ) +
     paper_theme()
 }
@@ -103,12 +104,12 @@ write_figures <- function(aggregate, yearly, benchmarks, figure_dir) {
   for (name in names(plots)) {
     ggplot2::ggsave(
       file.path(figure_dir, paste0(name, ".pdf")), plots[[name]],
-      width = 7.5, height = 5.2, units = "in"
+      width = 7.5, height = 6.1, units = "in"
     )
   }
   ggplot2::ggsave(
     file.path(figure_dir, "all_criminals_by_race.png"), plots$all_criminals_by_race,
-    width = 7.5, height = 5.2, units = "in", dpi = 180
+    width = 7.5, height = 6.1, units = "in", dpi = 180
   )
   invisible(names(plots))
 }

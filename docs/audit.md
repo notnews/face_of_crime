@@ -25,7 +25,7 @@ The episode data give race and gender totals for each episode, but do not link a
 | Victim comparisons | Same show shares | Historical NCVS victimization or UCR/NYPD murder-victim shares | Difference in recorded composition; NCVS excludes homicide and its survey categories differ from the show coding. |
 | Population comparisons | Same show shares | Three Census snapshot years | Population composition is context, not a matched crime baseline. |
 
-The benchmark plots display an unweighted average across available years in each preserved historical file and name that difference in their captions. The annual tables compare values for the same calendar year where a reference value exists. The manuscript's NCVS race and female victimization means both cover 1993–2014, matching the plotted reference points. The NCVS Black comparisons use the non-Hispanic Black columns, consistent with the show's separate Hispanic category; this changes the serious-violence reference from 19.2% to 18.5%. No newer source vintage was substituted.
+The main plots now pool the NCVS survey weights and UCR counts over each show's coded broadcast years for which each source has data. The old 18.5% NCVS Black serious-violence figure was an unweighted mean of annual percentages for 1993–2014; the matched pooled estimates are 19.9% for Criminal Intent (2001–2011), 21.1% for Original (2005–2010), and 19.1% for SVU (1999–2014). These are shares of victimizations involving non-Hispanic Black victims, not rates of victimization among Black people. The early Original episodes have no NCVS or UCR years. The annual tables retain the single-year comparisons. NYPD has annual percentages but no recoverable annual counts in the archived tables, so it appears only in the annual supporting tables. The NCVS API file covers the same historical years as the old handoff, with its retrieval URL and hash pinned separately.
 
 ## Remaining source and design limits
 
@@ -33,22 +33,22 @@ The benchmark plots display an unweighted average across available years in each
 - Twelve episode-role-attribute combinations have classified counts above the declared number of characters; the affected rows are in [`coding_discrepancies.csv`](coding_discrepancies.csv). Twenty-nine victim totals and 21 criminal totals are missing or nonnumeric. The source sheets cannot resolve all of these conflicts, so the pipeline keeps their classified category counts and reports the discrepancy.
 - SVU has one repeated season/episode identifier: season 4, episode 4 labels both “Deception” and “Lust.” Both source rows remain; the episode identifier needs verification against an independent episode list before changing either row.
 - The asterisked `Female*` entry has a `*Transgender` note. Its intended coding category is ambiguous. The analysis preserves the original exclusion rather than inferring an identity from that note. The additional 385-row SVU template is largely empty and is not an analysis input.
-- The contextual CSVs have source spreadsheets, but no documented cell ranges or extraction scripts. Hashes guarantee that this build uses the same files; they do not establish that every CSV cell matches its source publication. The audience calculation in the original `05_audience.R` depends on absent files; its three historical audience averages remain in the manuscript with their original attribution and cannot be rebuilt from this repository.
-- NCVS rape/sexual assault is a survey estimate of victimizations. The historical files do not provide standard errors, and the annual estimates for that offense can be based on small samples. The 89.7% female point is the unweighted mean of annual female shares, not a share calculated from pooled victimizations or an estimate for the show's rape victims.
+- The NCVS annual shares are rebuilt from the pinned official API records and match every numeric cell in the archived CSVs to its displayed precision. UCR arrest and murder-victim annual shares are rebuilt from the archived count workbooks. NYPD and Census extraction from their original publications is still undocumented. The audience calculation in the original `05_audience.R` depends on absent files; its three historical audience averages remain in the manuscript with their original attribution and cannot be rebuilt from this repository.
+- NCVS rape/sexual assault is a survey estimate of victimizations. The matched pooled female shares are 88.7%–89.7%, not an estimate for the show's rape victims. The API supplies design codes, but valid pooled standard errors require the BJS modified incident file and year-group procedure; these have not been reconstructed here. NCVS dots therefore show point estimates only.
 - This is a census of the available coded episodes, not a random sample of television programming. The paper does not attach sampling intervals to its show shares. Any generalization beyond these episodes, or causal claim about viewer beliefs, requires additional design and data.
 
 ## Checks performed and gates
 
 | Check | Result |
 |---|---|
-| Source hashes and row counts | All 28 preserved source files match the manifest; 731 analysis rows partition into 194 CI, 151 Original, and 386 SVU. |
+| Source hashes and row counts | All 29 pinned source files match the manifest; 731 analysis rows partition into 194 CI, 151 Original, and 386 SVU. |
 | Parser, category sums, and denominators | Tests cover count syntax, ambiguous labels, and reconciliation of every share with its category counts. |
 | Source missingness and duplicate keys | `--` parsed as missing; missing declared totals and one duplicate key recorded. |
-| External benchmark mapping | Nine Census columns mapped by name and tested against 1990, 2000, and 2010 values. |
+| External benchmark mapping | Nine Census columns mapped by name; all NCVS annual cells reconciled with the archived handoff; UCR arrest shares reconciled to the count workbook. |
 | Inference and identification | No inferential estimator is used for the episode census; benchmark comparability and causal interpretation are limited as above. |
 | Figures, tables, and prose | Generated from one R pipeline; headline manuscript values are macros from the analysis. |
-| External source extraction | Untestable from the materials supplied: original source table IDs, retrieval dates, and extraction code are absent. |
+| External source extraction | Pinned BJS API response and UCR workbooks now drive the corresponding estimates. NYPD and Census original extraction remains unverified. |
 
 ## Possible future data update
 
-A refresh should be a separate, reviewed commit. It would identify the exact official series and table for each comparison, state why the newer release improves measurement, save source URLs, retrieval dates, file hashes, and extraction code, then report old-vintage and new-vintage results side by side. No refresh has been made here.
+A future refresh to newer survey or crime years should be a separate, reviewed commit. It should identify the exact official series and table for each comparison, state why the newer release improves measurement, save source URLs, retrieval dates, file hashes, and extraction code, then report old-vintage and new-vintage results side by side. This change pinned official NCVS records for the existing 1993–2014 period; it did not add newer survey years.
