@@ -7,6 +7,7 @@
 renv/library/
 renv/staging/
 data/build/
+data/extracted/
 
 ms/*.aux
 ms/*.bbl

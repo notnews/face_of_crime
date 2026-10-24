@@ -1,0 +1,44 @@
+\clearpage
+\section{Reference Data}
+\label{si_references}
+\begingroup
+\emergencystretch=2em
+
+Tables~\ref{tab:criminal_references} and~\ref{tab:victim_references} collect the pooled comparisons, including the NYPD robbery and assault series available in the archived workbooks. Each reference pools the available observations in years with coded episodes in any of the three series. The overlap is 1999--2014 for NCVS, 1999--2015 for UCR race and sex, 2013--2015 for UCR ethnicity, and 2008--2015 for NYPD enforcement and rape arrests. NYPD homicide sex reports cover shorter periods, shown separately. Counts or survey weights are pooled before taking the percentage; annual percentages are not averaged with equal weights.
+
+\subsection*{Sources and Definitions}
+\begin{description}\raggedright
+\item[NCVS.] The National Crime Victimization Survey covers nonfatal victimizations of people age 12 or older in sampled U.S. households, including crimes not reported to police. Serious violence includes rape/sexual assault, robbery, and aggravated assault; it excludes homicide and simple assault. The preserved BJS NCVS Select response covers 1993--2014. Victim shares use the series-adjusted victimization weight, \texttt{newwgt}, with all victimizations of the relevant offense in the denominator. Black means non-Hispanic Black; Hispanic includes people of any race. The female-only offender comparison uses victim-reported offender sex and includes incidents with male-only, female-only, or mixed-sex offenders in its denominator, excluding unknown and residue codes. It counts weighted victimizations, not individual offenders.
+
+\item[UCR arrests.] The archived FBI Uniform Crime Reports workbook contains annual arrest counts by offense, race, and sex for 1995--2015. Arrests count events rather than unique people. Race and sex shares use the corresponding reported count totals. Hispanic shares use arrests with reported ethnicity in 2013--2015; their coverage differs from the race tables. Violent arrests combine murder/non-negligent manslaughter, rape, robbery, and aggravated assault. The rape definition changes in 2013.
+
+\item[UCR homicide victims.] The separate archived workbook contains annual murder-victim counts. The denominator includes all recorded victims, including those of unknown race or sex. UCR Black race counts include Hispanic people.
+
+\item[NYPD enforcement.] Eight annual workbooks, 2008--2015, report victim and suspect race/ethnicity for murder/non-negligent manslaughter, rape, robbery, and felonious assault. The denominator is the report's count with known race/ethnicity. Black and Hispanic are separate categories. Annual percentages are published to one decimal place; integer counts consistent with those percentages and denominators are reconstructed before pooling. Suspects and arrestees are different report categories.
+
+\item[NYPD homicide reports.] The separate \textit{Murder in New York City} reports for 2010--2012 give victim and suspect sex, with percentages rounded to whole numbers. Victim figures cover all three years. The 2010 report describes arrested murder suspects; the 2011 and 2012 reports describe known suspects, arrested or not. Accordingly, the 2010 arrestee figure is reported separately from the 2011--2012 suspect pool. The original PDFs are preserved, and totals and percentages are extracted from pages 5 and 9.
+
+\item[NYPD rape arrests.] A preserved response from NYC Open Data's historical arrest API gives annual rape-arrest counts by sex for 2008--2015. Each annual total is within five arrests of the corresponding archived enforcement report. The API's homicide series does not reconcile with those reports: in 2015 it has 858 arrests compared with the report's 308. Homicide sex comparisons therefore use the separate homicide reports above.
+
+\item[Census.] The archived workbook supplies US and New York population shares in 1990, 2000, and 2010 for the annual tables. These are population compositions at the reported census dates; they are not interpolated or pooled into the crime references.
+\end{description}
+
+\clearpage
+\input{../tabs/criminal_references.tex}
+\clearpage
+\input{../tabs/victim_references.tex}
+
+\clearpage
+\subsection*{Rounding and Survey Uncertainty}
+The NYPD reconstruction retains the lowest and highest integer counts consistent with each reported percentage. The plotted estimate is the midpoint of the pooled range. For female homicide references, the compatible pooled percentages are: \input{../tabs/reference_rounding.tex} These ranges reflect publication rounding, not sampling uncertainty. The machine-readable reference inventory also includes the rounding bounds for the NYPD race/ethnicity comparisons.
+
+NCVS estimates have sampling uncertainty. The figures show point estimates without standard-error bars. Although the API includes pseudo-stratum and half-sample codes, BJS's direct-variance procedure requires a modified incident file with dummy records for every primary sampling unit and additional handling of pooled year groups. That procedure has not been reconstructed from the preserved API subset. Administrative counts likewise do not provide sampling standard errors for these comparisons; their coverage and classification differ across sources.
+
+\subsection*{Reproduction and Source Files}
+The repository preserves the episode coding sheets, source workbooks, downloaded API responses, and NYPD PDFs under \texttt{data/raw/}. The original annual CSV handoffs remain under \texttt{data/reference/} for validation; they do not drive the estimates. Census and UCR workbooks are the original project's collected inputs, rather than a new download of each underlying government publication.
+
+\texttt{data/source\_manifest.csv} records source URLs, original filenames, retrieval dates where known, and SHA-256 hashes. The pipeline verifies those hashes, extracts the data, and regenerates all estimates, figures, and tables. \texttt{make check} runs that pipeline, compiles this paper, and runs the tests and lint checks. \texttt{make download} retrieves missing inputs only when their bytes match the pinned hashes; a changed upstream response requires an explicit source update. Extraction outputs are disposable and rebuilt automatically.
+
+Official source documentation: \href{https://bjs.ojp.gov/national-crime-victimization-survey-ncvs-api}{BJS NCVS API}, \href{https://bjs.ojp.gov/document/NCVS_Select_person_level_codebook.pdf}{NCVS Select codebook}, \href{https://bjs.ojp.gov/sites/g/files/xyckuh236/files/media/document/ncvs_variance_user_guide_11.06.14.pdf}{NCVS direct-variance guide}, \href{https://www.nyc.gov/site/nypd/stats/reports-analysis/archive.page}{NYPD report archive}, and \href{https://data.cityofnewyork.us/Public-Safety/NYPD-Arrests-Data-Historic-/8h9b-rp9u}{NYPD historical arrests}.
+
+\endgroup

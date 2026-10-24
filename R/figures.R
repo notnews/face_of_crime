@@ -45,7 +45,7 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
       if (group %in% c("black", "hispanic")) {
         "NYPD dots pool victims with known race/ethnicity (2008-2015)."
       } else {
-        ""
+        "NYPD homicide: pooled 2010-2012 victims, reconstructed from rounded report percentages."
       },
       "Each gray reference dot pools available years in which any coded episode aired.",
       if (group == "black") {
@@ -59,8 +59,9 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
     )
   } else if (group == "female") {
     paste(
-      "Colored dots pool classified criminal characters. UCR and NYPD dots pool arrests.",
-      "NYPD rape arrests cover 2008-2015.",
+      "Colored dots pool classified criminal characters. UCR dots pool arrests.",
+      "NYPD: rape arrests (2008-2015); known homicide suspects (2011-2012).",
+      "Homicide percentages are reconstructed from rounded reports.",
       "NCVS: serious-violence incidents with victim-reported female-only offenders",
       "among known-sex incidents (SEs not shown);",
       "mixed-sex groups remain in the denominator.",
@@ -109,7 +110,7 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
 
 yearly_reference <- function(source_tables, years, role, group) {
   if (role == "victim") {
-    source <- if (group == "black") source_tables$ncvs_hispanic else source_tables$ncvs
+    source <- if (group == "black") source_tables$ncvs_race_ethnicity else source_tables$ncvs
     value <- if (group == "black") {
       source$serious_violent_victimization_nh_black
     } else {
@@ -193,19 +194,19 @@ plot_yearly_share <- function(shares, source_tables, role, group) {
 
 write_figures <- function(aggregate, yearly, benchmarks, source_tables, figure_dir) {
   plots <- list(
-    all_victims_by_gender = plot_aggregate_share(aggregate, benchmarks, "victim", "female"),
-    all_criminals_by_gender = plot_aggregate_share(aggregate, benchmarks, "criminal", "female"),
-    all_victims_by_race = plot_aggregate_share(aggregate, benchmarks, "victim", "black"),
-    all_criminals_by_race = plot_aggregate_share(aggregate, benchmarks, "criminal", "black"),
-    all_victims_by_race_hispanic = plot_aggregate_share(aggregate, benchmarks, "victim", "hispanic"),
-    all_criminals_by_race_hispanic = plot_aggregate_share(aggregate, benchmarks, "criminal", "hispanic"),
-    all_victims_by_gender_ts = plot_yearly_share(yearly, source_tables, "victim", "female"),
-    all_criminals_by_gender_ts = plot_yearly_share(yearly, source_tables, "criminal", "female"),
-    all_victims_by_race_ts = plot_yearly_share(yearly, source_tables, "victim", "black"),
-    all_criminals_by_race_ts = plot_yearly_share(yearly, source_tables, "criminal", "black")
+    victim_female_share = plot_aggregate_share(aggregate, benchmarks, "victim", "female"),
+    criminal_female_share = plot_aggregate_share(aggregate, benchmarks, "criminal", "female"),
+    victim_black_share = plot_aggregate_share(aggregate, benchmarks, "victim", "black"),
+    criminal_black_share = plot_aggregate_share(aggregate, benchmarks, "criminal", "black"),
+    victim_hispanic_share = plot_aggregate_share(aggregate, benchmarks, "victim", "hispanic"),
+    criminal_hispanic_share = plot_aggregate_share(aggregate, benchmarks, "criminal", "hispanic"),
+    victim_female_share_by_year = plot_yearly_share(yearly, source_tables, "victim", "female"),
+    criminal_female_share_by_year = plot_yearly_share(yearly, source_tables, "criminal", "female"),
+    victim_black_share_by_year = plot_yearly_share(yearly, source_tables, "victim", "black"),
+    criminal_black_share_by_year = plot_yearly_share(yearly, source_tables, "criminal", "black")
   )
   for (name in names(plots)) {
-    is_aggregate <- !grepl("_ts$", name)
+    is_aggregate <- !grepl("_by_year$", name)
     height <- if (is_aggregate) 1.75 + 0.34 * nrow(plots[[name]]$data) else 6.1
     ggplot2::ggsave(
       file.path(figure_dir, paste0(name, ".pdf")), plots[[name]],
@@ -213,8 +214,8 @@ write_figures <- function(aggregate, yearly, benchmarks, source_tables, figure_d
     )
   }
   ggplot2::ggsave(
-    file.path(figure_dir, "all_criminals_by_race.png"), plots$all_criminals_by_race,
-    width = 7.5, height = 1.75 + 0.34 * nrow(plots$all_criminals_by_race$data), units = "in", dpi = 180
+    file.path(figure_dir, "criminal_black_share.png"), plots$criminal_black_share,
+    width = 7.5, height = 1.75 + 0.34 * nrow(plots$criminal_black_share$data), units = "in", dpi = 180
   )
   invisible(names(plots))
 }

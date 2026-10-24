@@ -1,17 +1,25 @@
 testthat::test_that("NYPD workbooks reproduce archived annual race/ethnicity shares", {
-  counts <- read_nypd_race_counts(file.path(reference_dir, "ny_enforcement"))
-  annual <- read_percent_table(file.path(reference_dir, "ny_enforcement", "nyc_enforcement.csv"))
-  testthat::expect_equal(nrow(counts), 64L)
+  counts <- read_nypd_race_counts(file.path(raw_dir, "nypd", "enforcement"))
+  annual <- read_percent_table(file.path(reference_dir, "nypd", "enforcement_shares.csv"))
+  testthat::expect_equal(nrow(counts), 192L)
   testthat::expect_equal(sort(unique(counts$year)), 2008:2015)
   for (i in seq_len(nrow(counts))) {
     row <- counts[i, ]
     column <- paste0(
-      if (row$offense == "homicide") "homicides" else "rapes",
+      switch(row$offense,
+        homicide = "homicides",
+        rape = "rapes",
+        robbery = "robberies",
+        assault = "assaults"
+      ),
       "_", row$group, "_", row$role
     )
     testthat::expect_equal(row$reported_pct, annual[[column]][annual$year == row$year])
   }
-  ambiguous <- counts[counts$count_min != counts$count_max, ]
+  ambiguous <- counts[
+    counts$count_min != counts$count_max &
+      counts$offense %in% c("homicide", "rape") & counts$group %in% c("black", "hispanic"),
+  ]
   testthat::expect_equal(nrow(ambiguous), 1L)
   testthat::expect_equal(
     unlist(
@@ -23,10 +31,10 @@ testthat::test_that("NYPD workbooks reproduce archived annual race/ethnicity sha
 })
 
 testthat::test_that("pooled NYPD comparisons cover the eight archived years", {
-  episodes <- read_episodes(raw_dir)
-  sources <- read_benchmarks(reference_dir)
+  episodes <- read_episodes(episode_dir)
+  sources <- read_benchmarks(raw_dir)
   pooled <- pooled_benchmarks(sources, episodes)
-  nypd <- pooled[pooled$source == "nyc", ]
+  nypd <- pooled[pooled$source == "nypd_enforcement", ]
   testthat::expect_equal(nrow(nypd), 8L)
   testthat::expect_true(all(nypd$first_year == 2008L & nypd$last_year == 2015L))
   testthat::expect_true(all(nypd$n_years == 8L))
@@ -37,13 +45,12 @@ testthat::test_that("pooled NYPD comparisons cover the eight archived years", {
 
 testthat::test_that("NYPD female rape arrest reference uses checked annual counts", {
   counts <- read_nypd_rape_arrests(file.path(
-    reference_dir, "ny_arrests", "rape_arrests_by_sex_2008_2015.csv"
+    raw_dir, "nypd", "arrests", "rape_arrests.json"
   ))
   annual <- aggregate(n ~ year, data = counts, sum)
   report_totals <- vapply(2008:2015, function(year) {
     path <- file.path(
-      reference_dir, "ny_enforcement",
-      paste("Enforcement Report Year", year, "tables.xls")
+      raw_dir, "nypd", "enforcement", paste0("year=", year), "enforcement.xls"
     )
     sheet <- readxl::read_excel(
       path,
@@ -59,18 +66,34 @@ testthat::test_that("NYPD female rape arrest reference uses checked annual count
   testthat::expect_equal(sum(counts$n[counts$perp_sex == "F"]), 151L)
   testthat::expect_equal(pool_nypd_rape_arrests(counts, 2008:2015), 100 * 151 / 6643)
 
-  episodes <- read_episodes(raw_dir)
-  pooled <- pooled_benchmarks(read_benchmarks(reference_dir), episodes)
-  row <- pooled[pooled$source == "nyc_arrests", ]
+  episodes <- read_episodes(episode_dir)
+  pooled <- pooled_benchmarks(read_benchmarks(raw_dir), episodes)
+  row <- pooled[pooled$source == "nypd_arrests", ]
   testthat::expect_equal(nrow(row), 1L)
   testthat::expect_equal(row$share_pct, 100 * 151 / 6643)
 
-  sources <- read_benchmarks(reference_dir)
+  sources <- read_benchmarks(raw_dir)
   yearly <- estimate_shares(episodes)$yearly
   table <- annual_table(yearly, sources, benchmark_catalog(), "criminal", "female")
-  reference <- sources$nyc_arrests
+  reference <- sources$nypd_arrests
   testthat::expect_equal(
     table[["NYPD rape arrests"]],
     reference$rape_female_arrests[match(table$Year, reference$year)]
   )
+})
+
+
+testthat::test_that("homicide PDFs retain the published years, denominators, and suspect definitions", {
+  counts <- extract_nypd_homicide_sex(file.path(raw_dir, "nypd", "homicide"))
+  testthat::expect_equal(counts$total, c(536L, 285L, 515L, 373L, 419L, 290L))
+  testthat::expect_equal(counts$reported_pct, c(17, 10, 20, 9, 16, 7))
+  testthat::expect_equal(counts$role, c("victim", "arrestee", "victim", "suspect", "victim", "suspect"))
+  testthat::expect_equal(counts$source_page, rep(c(5L, 9L), 3))
+  victims <- pool_nypd_homicide_sex(counts, 2010:2012, "victim")
+  suspects <- pool_nypd_homicide_sex(counts, 2010:2012, "suspect")
+  testthat::expect_equal(unname(victims), 100 * c(261, 255, 267) / 1470)
+  testthat::expect_equal(unname(suspects), 100 * c(53.5, 51, 56) / 663)
+  annual <- nypd_homicide_annual_shares(counts)
+  testthat::expect_true(is.na(annual$homicide_female_suspect[annual$year == 2010]))
+  testthat::expect_equal(annual$homicide_female_arrestee[annual$year == 2010], 10)
 })

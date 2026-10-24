@@ -61,17 +61,17 @@ add_category_counts <- function(rows, role, dimension, categories) {
   rows
 }
 
-read_episodes <- function(raw_dir) {
+read_episodes <- function(episode_dir) {
   inputs <- list(
-    list("ci/law_and_order_ci.csv", "Criminal Intent", NULL),
-    list("lo/law_and_order_lo.csv", "Original", NULL),
-    list("svu/law_and_order_svu_1.csv", "SVU", "season_1"),
-    list("svu/law_and_order_svu_2.csv", "SVU", NULL),
-    list("svu/law_and_order_svu_3_5.csv", "SVU", NULL),
-    list("svu/law_and_order_svu_6_17.csv", "SVU", NULL)
+    list("criminal_intent.csv", "Criminal Intent", NULL),
+    list("original.csv", "Original", NULL),
+    list("svu_season_01.csv", "SVU", "season_1"),
+    list("svu_season_02.csv", "SVU", NULL),
+    list("svu_seasons_03_05.csv", "SVU", NULL),
+    list("svu_seasons_06_17.csv", "SVU", NULL)
   )
   parts <- lapply(inputs, function(input) {
-    read_episode_file(file.path(raw_dir, input[[1]]), input[[2]], input[[3]])
+    read_episode_file(file.path(episode_dir, input[[1]]), input[[2]], input[[3]])
   })
   rows <- do.call(rbind, parts)
   rownames(rows) <- NULL

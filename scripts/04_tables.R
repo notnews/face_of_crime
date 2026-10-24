@@ -37,4 +37,6 @@ lines <- c(
   paste0(rows, " \\\\"),
   "\\end{longtable}", "\\endgroup"
 )
-writeLines(gsub("[ \t]+(?=\n|$)", "", lines, perl = TRUE), file.path(table_dir, "lit.tex"))
+writeLines(gsub("[ \t]+(?=\n|$)", "", lines, perl = TRUE), file.path(table_dir, "literature.tex"))
+
+write_reference_tables(results$benchmarks, prepared$benchmarks, prepared$episodes, table_dir)

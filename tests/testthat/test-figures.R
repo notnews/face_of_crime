@@ -1,6 +1,6 @@
 testthat::test_that("main figures give each coded series and reference its own row", {
-  episodes <- read_episodes(raw_dir)
-  sources <- read_benchmarks(reference_dir)
+  episodes <- read_episodes(episode_dir)
+  sources <- read_benchmarks(raw_dir)
   shares <- estimate_shares(episodes)$aggregate
   benchmarks <- pooled_benchmarks(sources, episodes)
 
@@ -23,11 +23,11 @@ testthat::test_that("main figures give each coded series and reference its own r
 })
 
 testthat::test_that("common reference pools only years with a coded episode", {
-  episodes <- read_episodes(raw_dir)
-  sources <- read_benchmarks(reference_dir)
+  episodes <- read_episodes(episode_dir)
+  sources <- read_benchmarks(raw_dir)
   benchmarks <- pooled_benchmarks(sources, episodes)
   black <- benchmarks[
-    benchmarks$source == "ncvs_hispanic" &
+    benchmarks$source == "ncvs_race_ethnicity" &
       benchmarks$column == "serious_violent_victimization_nh_black",
   ]
   expected <- ncvs_share(sources$ncvs_records, 1999:2014, "serious_violent", "victim_nh_black")
@@ -59,15 +59,15 @@ testthat::test_that("common reference pools only years with a coded episode", {
 })
 
 testthat::test_that("manuscript macro matches the single plotted NCVS reference", {
-  episodes <- read_episodes(raw_dir)
-  sources <- read_benchmarks(reference_dir)
+  episodes <- read_episodes(episode_dir)
+  sources <- read_benchmarks(raw_dir)
   shares <- estimate_shares(episodes)$aggregate
   benchmarks <- pooled_benchmarks(sources, episodes)
   path <- tempfile(fileext = ".tex")
   write_macros(shares, benchmarks, episodes, path)
   macros <- readLines(path)
   value <- benchmarks$share_pct[
-    benchmarks$source == "ncvs_hispanic" &
+    benchmarks$source == "ncvs_race_ethnicity" &
       benchmarks$column == "serious_violent_victimization_nh_black"
   ]
   testthat::expect_true(
@@ -76,8 +76,8 @@ testthat::test_that("manuscript macro matches the single plotted NCVS reference"
 })
 
 testthat::test_that("SI reference lines match the annual reference columns in the tables", {
-  episodes <- read_episodes(raw_dir)
-  sources <- read_benchmarks(reference_dir)
+  episodes <- read_episodes(episode_dir)
+  sources <- read_benchmarks(raw_dir)
   yearly <- estimate_shares(episodes)$yearly
   for (role in c("victim", "criminal")) {
     for (group in c("black", "female")) {

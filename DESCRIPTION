@@ -12,6 +12,8 @@ Encoding: UTF-8
 Imports:
     digest,
     ggplot2,
+    jsonlite,
+    pdftools,
     readxl,
     rprojroot
 Suggests:

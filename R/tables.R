@@ -14,14 +14,20 @@ annual_table <- function(yearly, benchmarks, catalog, role, group) {
   selected <- catalog[
     (catalog$role == role | catalog$role == "population") & catalog$group == group,
   ]
-  source_order <- c("ncvs", "ncvs_hispanic", "murder_victims", "ucr", "nyc", "nyc_arrests", "census")
+  source_order <- c(
+    "ncvs", "ncvs_race_ethnicity", "murder_victims", "ucr",
+    "nypd_enforcement", "nypd_homicide", "nypd_arrests", "census"
+  )
   selected <- selected[order(match(selected$source, source_order)), ]
   for (i in seq_len(nrow(selected))) {
     item <- selected[i, ]
     source <- benchmarks[[item$source]]
     key <- item$label
     values <- source[[item$column]]
-    if (group == "female" && !grepl("female_only", item$column) && item$source != "nyc_arrests") {
+    if (
+      group == "female" && !grepl("female_only", item$column) &&
+        !item$source %in% c("nypd_arrests", "nypd_homicide")
+    ) {
       values <- 100 - values
     }
     table[[key]] <- values[match(years, source$year)]
@@ -30,28 +36,64 @@ annual_table <- function(yearly, benchmarks, catalog, role, group) {
 }
 
 table_source <- function(header) {
-  if (header %in% c("Criminal Intent", "Original", "SVU")) return("Coded episodes")
-  if (grepl("^NCVS", header)) return("NCVS")
-  if (grepl("^UCR", header)) return("UCR")
-  if (grepl("^NYPD", header)) return("NYPD")
+  if (header %in% c("Criminal Intent", "Original", "SVU")) {
+    return("Coded episodes")
+  }
+  if (grepl("^NCVS", header)) {
+    return("NCVS")
+  }
+  if (grepl("^UCR", header)) {
+    return("UCR")
+  }
+  if (grepl("^NYPD", header)) {
+    return("NYPD")
+  }
   "Census"
 }
 
 table_heading <- function(header) {
-  if (header == "Criminal Intent") return("CI")
-  if (header %in% c("Original", "SVU")) return(header)
-  if (grepl("female-only offender", header)) return("Female-only")
-  if (grepl("serious violence", header)) return("Serious")
-  if (grepl("rape/sexual assault", header)) return("Rape/SA")
-  if (grepl("aggravated assault", header)) return("Aggravated")
-  if (grepl("murder victims", header)) return("Murder")
-  if (grepl("all arrests", header)) return("All")
-  if (grepl("violent arrests", header)) return("Violent")
-  if (grepl("homicide", header)) return("Homicide")
-  if (grepl("rape", header)) return("Rape")
-  if (grepl("assault", header)) return("Assault")
-  if (header == "US Census") return("US")
-  if (header == "NY Census") return("NY")
+  if (header == "Criminal Intent") {
+    return("CI")
+  }
+  if (header %in% c("Original", "SVU")) {
+    return(header)
+  }
+  if (grepl("female-only offender", header)) {
+    return("Female-only")
+  }
+  if (grepl("serious violence", header)) {
+    return("Serious")
+  }
+  if (grepl("rape/sexual assault", header)) {
+    return("Rape/SA")
+  }
+  if (grepl("aggravated assault", header)) {
+    return("Aggravated")
+  }
+  if (grepl("murder victims", header)) {
+    return("Murder")
+  }
+  if (grepl("all arrests", header)) {
+    return("All")
+  }
+  if (grepl("violent arrests", header)) {
+    return("Violent")
+  }
+  if (grepl("homicide", header)) {
+    return("Homicide")
+  }
+  if (grepl("rape", header)) {
+    return("Rape")
+  }
+  if (grepl("assault", header)) {
+    return("Assault")
+  }
+  if (header == "US Census") {
+    return("US")
+  }
+  if (header == "NY Census") {
+    return("NY")
+  }
   stop("Unknown table header: ", header)
 }
 
@@ -86,7 +128,7 @@ write_latex_table <- function(table, path, caption, label, role, group) {
       },
       "UCR: arrests;",
       if ("NYPD" %in% sources) {
-        if (group == "female") "NYPD: rape arrests." else "NYPD: suspects."
+        if (group == "female") "NYPD: known homicide suspects and rape arrests." else "NYPD: suspects."
       } else {
         ""
       }
@@ -106,7 +148,7 @@ write_latex_table <- function(table, path, caption, label, role, group) {
     paste0("\\captionof{table}{", caption, "}"),
     paste0("\\label{", label, "}"),
     "\\small",
-    "\\setlength{\\tabcolsep}{3.5pt}",
+    paste0("\\setlength{\\tabcolsep}{", if (ncol(table) > 10L) "2.5" else "3.5", "pt}"),
     "\\renewcommand{\\arraystretch}{1.08}",
     paste0("\\begin{tabular}{@{}", paste(rep("r", ncol(table)), collapse = ""), "@{}}"),
     "\\toprule",
@@ -118,7 +160,7 @@ write_latex_table <- function(table, path, caption, label, role, group) {
     "\\bottomrule", "\\end{tabular}",
     "\\par\\smallskip",
     paste0(
-      "\\parbox{\\linewidth}{\\footnotesize ", show_note,
+      "\\parbox{\\linewidth}{\\footnotesize\\raggedright ", show_note,
       " in episodes broadcast that year. ", source_note,
       " Census: population. ", race_note,
       " Entries are percentages; -- denotes no data.}"
@@ -166,9 +208,9 @@ write_macros <- function(aggregate, benchmarks, episodes, path) {
   }
   macros <- c(
     macros,
-    point_macro("NcvsSeriousBlack", "ncvs_hispanic", "serious_violent_victimization_nh_black", "black"),
-    point_macro("NcvsRapeBlack", "ncvs_hispanic", "rape_nh_black", "black"),
-    point_macro("NcvsAssaultBlack", "ncvs_hispanic", "aggravated_assault_nh_black", "black"),
+    point_macro("NcvsSeriousBlack", "ncvs_race_ethnicity", "serious_violent_victimization_nh_black", "black"),
+    point_macro("NcvsRapeBlack", "ncvs_race_ethnicity", "rape_nh_black", "black"),
+    point_macro("NcvsAssaultBlack", "ncvs_race_ethnicity", "aggravated_assault_nh_black", "black"),
     point_macro("UcrMurderVictimBlack", "murder_victims", "murder_victim_black", "black"),
     point_macro("NcvsSeriousFemale", "ncvs", "serious_violent_victimization_male", "female"),
     point_macro("NcvsRapeFemale", "ncvs", "rape_sexual_assault_male", "female"),
@@ -181,7 +223,7 @@ write_tables <- function(aggregate, yearly, benchmarks, source_tables, episodes,
   catalog <- benchmark_catalog()
   for (role in c("victim", "criminal")) {
     for (group in c("female", "black")) {
-      stem <- paste0(if (role == "victim") "v" else "c", "_", if (group == "female") "gender" else "race")
+      stem <- paste(role, if (group == "female") "sex" else "race", "by_year", sep = "_")
       table <- annual_table(yearly, source_tables, catalog, role, group)
       caption <- paste("Annual share of", group, role, "characters and historical comparisons")
       label <- paste0("tab:", if (role == "victim") "v" else "c", "_", if (group == "female") "sex" else "race")
