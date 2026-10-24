@@ -15,27 +15,28 @@ series_colours <- c(
   "SVU" = "#D55E00",
   "Criminal Intent" = "#009E73"
 )
-point_colours <- c(series_colours, "Historical Reference" = "#555555")
+point_colours <- c(series_colours, "Reference" = "#555555")
 
 plot_aggregate_share <- function(shares, benchmarks, role, group) {
   show <- shares[shares$role == role & shares$group == group & shares$crime_group == "all", ]
-  show$entity <- "Coded Episodes"
+  show$entity <- show$series
   show$legend <- show$series
 
   reference <- benchmarks[benchmarks$role == role & benchmarks$group == group, ]
   reference$entity <- gsub(" all ", " All ", tools::toTitleCase(reference$label), fixed = TRUE)
-  reference$legend <- "Historical Reference"
+  reference$legend <- "Reference"
 
   points <- rbind(
     show[c("entity", "share_pct", "legend")],
     reference[c("entity", "share_pct", "legend")]
   )
-  points$entity <- factor(points$entity, levels = rev(unique(points$entity)))
+  points$entity <- factor(points$entity, levels = rev(c(names(series_colours), reference$entity)))
   points$legend <- factor(points$legend, levels = names(point_colours))
   label <- paste(tools::toTitleCase(group), if (role == "victim") "victims" else "criminals")
+  axis_max <- min(100, 10 * ceiling(1.1 * max(points$share_pct) / 10))
   caption <- if (role == "victim") {
     paste(
-      "Coded dots pool classified victim characters.",
+      "Colored dots pool classified victim characters.",
       if (group == "hispanic") {
         "NCVS dots pool weighted victimizations (survey estimates; SEs not shown)."
       } else {
@@ -47,7 +48,7 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
     )
   } else if (group == "female") {
     paste(
-      "Coded dots pool classified criminal characters. UCR dots pool arrests.",
+      "Colored dots pool classified criminal characters. UCR dots pool arrests.",
       "NCVS: serious-violence incidents with victim-reported female-only offenders",
       "among known-sex incidents (SEs not shown);",
       "mixed-sex groups remain in the denominator.",
@@ -56,7 +57,7 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
     )
   } else {
     paste(
-      "Coded dots pool classified criminal characters. UCR dots pool arrests.",
+      "Colored dots pool classified criminal characters. UCR dots pool arrests.",
       "Each gray reference dot pools available years in which any coded episode aired.",
       if (group == "hispanic") {
         "UCR ethnicity counts begin in 2013 and cover arrests with reported ethnicity."
@@ -68,18 +69,12 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
   }
 
   ggplot2::ggplot(points, ggplot2::aes(x = share_pct, y = entity, colour = legend)) +
-    ggplot2::geom_point(
-      data = points[points$legend != "Historical Reference", ],
-      size = 2.8, position = ggplot2::position_dodge(width = 0.42, reverse = TRUE)
-    ) +
-    ggplot2::geom_point(
-      data = points[points$legend == "Historical Reference", ], size = 2.8
-    ) +
+    ggplot2::geom_point(size = 2.8) +
     ggplot2::scale_y_discrete(limits = levels(points$entity)) +
-    ggplot2::scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, 20)) +
-    ggplot2::scale_colour_manual(values = point_colours) +
+    ggplot2::scale_x_continuous(limits = c(0, axis_max), breaks = seq(0, axis_max, 10)) +
+    ggplot2::scale_colour_manual(values = point_colours, guide = "none") +
     ggplot2::labs(
-      title = label, x = "Share (%)", y = NULL, colour = NULL,
+      title = label, x = "Share (%)", y = NULL,
       caption = caption
     ) +
     paper_theme()
@@ -118,14 +113,16 @@ write_figures <- function(aggregate, yearly, benchmarks, figure_dir) {
     all_criminals_by_race_ts = plot_yearly_share(yearly, "criminal", "black")
   )
   for (name in names(plots)) {
+    is_aggregate <- !grepl("_ts$", name)
+    height <- if (is_aggregate) 1.75 + 0.34 * nrow(plots[[name]]$data) else 6.1
     ggplot2::ggsave(
       file.path(figure_dir, paste0(name, ".pdf")), plots[[name]],
-      width = 7.5, height = 6.1, units = "in"
+      width = 7.5, height = height, units = "in"
     )
   }
   ggplot2::ggsave(
     file.path(figure_dir, "all_criminals_by_race.png"), plots$all_criminals_by_race,
-    width = 7.5, height = 6.1, units = "in", dpi = 180
+    width = 7.5, height = 1.75 + 0.34 * nrow(plots$all_criminals_by_race$data), units = "in", dpi = 180
   )
   invisible(names(plots))
 }

@@ -38,7 +38,7 @@ benchmark_catalog <- function() {
   catalog <- data.frame(
     source = c(
       rep("ncvs", 3), rep("ncvs_hispanic", 3), rep("murder_victims", 2), rep("ucr", 10),
-      rep("nyc", 4), rep("census", 4), rep("ncvs_hispanic", 2),
+      rep("nyc", 4), rep("census", 4), rep("ncvs_hispanic", 3),
       rep("ucr_hispanic", 3)
     ),
     column = c(
@@ -52,20 +52,20 @@ benchmark_catalog <- function() {
       "assault_perc_black", "homicides_black_victim", "rapes_black_victim",
       "homicides_black_suspect", "rapes_black_suspect",
       "men_us", "men_ny", "black_us", "black_ny",
-      "rape_hispanic", "serious_violent_victimization_hispanic",
+      "rape_hispanic", "serious_violent_victimization_hispanic", "aggravated_assault_hispanic",
       "all_crime_perc_hispanic", "homicides_perc_hispanic", "rape_perc_hispanic"
     ),
     role = c(
       rep("victim", 8), rep("criminal", 10),
       "victim", "victim", "criminal", "criminal",
       "population", "population", "population", "population",
-      "victim", "victim", rep("criminal", 3)
+      "victim", "victim", "victim", rep("criminal", 3)
     ),
     group = c(
       rep("female", 3), rep("black", 3), "female", "black",
       rep("female", 5), rep("black", 5), rep("black", 4),
       "female", "female", "black", "black",
-      "hispanic", "hispanic", rep("hispanic", 3)
+      "hispanic", "hispanic", "hispanic", rep("hispanic", 3)
     ),
     label = c(
       "NCVS serious violence", "NCVS rape/sexual assault", "NCVS aggravated assault",
@@ -77,7 +77,7 @@ benchmark_catalog <- function() {
       "UCR assault arrests", "NYPD homicide victims", "NYPD rape victims",
       "NYPD homicide suspects", "NYPD rape suspects",
       "US Census", "NY Census", "US Census", "NY Census",
-      "NCVS rape/sexual assault", "NCVS serious violence",
+      "NCVS rape/sexual assault", "NCVS serious violence", "NCVS aggravated assault",
       "UCR all arrests", "UCR homicide arrests", "UCR rape arrests"
     ),
     stringsAsFactors = FALSE

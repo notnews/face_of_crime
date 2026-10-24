@@ -1,4 +1,4 @@
-testthat::test_that("main figures show three coded series and one dot per reference", {
+testthat::test_that("main figures give each coded series and reference its own row", {
   episodes <- read_episodes(raw_dir)
   sources <- read_benchmarks(reference_dir)
   shares <- estimate_shares(episodes)$aggregate
@@ -7,11 +7,12 @@ testthat::test_that("main figures show three coded series and one dot per refere
   for (role in c("victim", "criminal")) {
     for (group in c("female", "black", "hispanic")) {
       plot <- plot_aggregate_share(shares, benchmarks, role, group)
-      show <- plot$data[as.character(plot$data$entity) == "Coded Episodes", ]
-      reference <- plot$data[as.character(plot$data$legend) == "Historical Reference", ]
+      show <- plot$data[as.character(plot$data$legend) != "Reference", ]
+      reference <- plot$data[as.character(plot$data$legend) == "Reference", ]
       expected <- shares[shares$role == role & shares$group == group, ]
       expected_reference <- benchmarks[benchmarks$role == role & benchmarks$group == group, ]
       testthat::expect_equal(nrow(show), 3L)
+      testthat::expect_equal(as.character(show$entity), expected$series)
       testthat::expect_equal(as.character(show$legend), expected$series)
       testthat::expect_equal(show$share_pct, expected$share_pct)
       testthat::expect_equal(nrow(reference), nrow(expected_reference))
@@ -45,6 +46,16 @@ testthat::test_that("common reference pools only years with a coded episode", {
   counts <- sources$ucr_counts[sources$ucr_counts$offense == "violent", ]
   testthat::expect_equal(ucr$share_pct, pool_count_share(counts, 1999:2015, "black"))
   testthat::expect_equal(ucr$n_years, 17L)
+
+  hispanic_assault <- benchmarks[
+    benchmarks$role == "victim" & benchmarks$group == "hispanic" &
+      benchmarks$column == "aggravated_assault_hispanic",
+  ]
+  testthat::expect_equal(nrow(hispanic_assault), 1L)
+  testthat::expect_equal(
+    hispanic_assault$share_pct,
+    ncvs_share(sources$ncvs_records, 1999:2014, "aggravated_assault", "victim_hispanic")$share_pct
+  )
 })
 
 testthat::test_that("manuscript macro matches the single plotted NCVS reference", {

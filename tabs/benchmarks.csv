@@ -19,6 +19,7 @@
 "ucr","assault_perc_black","criminal","black","UCR assault arrests",1999,2015,17,33.7434679264044
 "ncvs_hispanic","rape_hispanic","victim","hispanic","NCVS rape/sexual assault",1999,2014,16,10.1634616694196
 "ncvs_hispanic","serious_violent_victimization_hispanic","victim","hispanic","NCVS serious violence",1999,2014,16,14.1881930403684
+"ncvs_hispanic","aggravated_assault_hispanic","victim","hispanic","NCVS aggravated assault",1999,2014,16,13.0629706577743
 "ucr_hispanic","all_crime_perc_hispanic","criminal","hispanic","UCR all arrests",2013,2015,3,18.0947401680231
 "ucr_hispanic","homicides_perc_hispanic","criminal","hispanic","UCR homicide arrests",2013,2015,3,21.3276916919206
 "ucr_hispanic","rape_perc_hispanic","criminal","hispanic","UCR rape arrests",2013,2015,3,25.2157686027525
