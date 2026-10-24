@@ -153,25 +153,22 @@ write_macros <- function(aggregate, benchmarks, episodes, path) {
       }
     }
   }
-  range_macros <- function(prefix, source, column, group) {
+  point_macro <- function(prefix, source, column, group) {
     values <- benchmarks$share_pct[
       benchmarks$source == source & benchmarks$column == column & benchmarks$group == group
     ]
-    stopifnot(length(values) == 3L)
-    c(
-      macro_line(paste0(prefix, "LowPct"), sprintf("%.1f", min(values))),
-      macro_line(paste0(prefix, "HighPct"), sprintf("%.1f", max(values)))
-    )
+    stopifnot(length(values) == 1L)
+    macro_line(paste0(prefix, "Pct"), sprintf("%.1f", values))
   }
   macros <- c(
     macros,
-    range_macros("NcvsSeriousBlack", "ncvs_hispanic", "serious_violent_victimization_nh_black", "black"),
-    range_macros("NcvsRapeBlack", "ncvs_hispanic", "rape_nh_black", "black"),
-    range_macros("NcvsAssaultBlack", "ncvs_hispanic", "aggravated_assault_nh_black", "black"),
-    range_macros("UcrMurderVictimBlack", "murder_victims", "murder_victim_black", "black"),
-    range_macros("NcvsSeriousFemale", "ncvs", "serious_violent_victimization_male", "female"),
-    range_macros("NcvsRapeFemale", "ncvs", "rape_sexual_assault_male", "female"),
-    range_macros("UcrMurderVictimFemale", "murder_victims", "murder_victim_men", "female")
+    point_macro("NcvsSeriousBlack", "ncvs_hispanic", "serious_violent_victimization_nh_black", "black"),
+    point_macro("NcvsRapeBlack", "ncvs_hispanic", "rape_nh_black", "black"),
+    point_macro("NcvsAssaultBlack", "ncvs_hispanic", "aggravated_assault_nh_black", "black"),
+    point_macro("UcrMurderVictimBlack", "murder_victims", "murder_victim_black", "black"),
+    point_macro("NcvsSeriousFemale", "ncvs", "serious_violent_victimization_male", "female"),
+    point_macro("NcvsRapeFemale", "ncvs", "rape_sexual_assault_male", "female"),
+    point_macro("UcrMurderVictimFemale", "murder_victims", "murder_victim_men", "female")
   )
   writeLines(macros, path)
 }

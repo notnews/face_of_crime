@@ -88,87 +88,63 @@ benchmark_catalog <- function() {
   ))
 }
 
-summarise_benchmarks <- function(benchmarks) {
-  catalog <- benchmark_catalog()
-  rows <- lapply(seq_len(nrow(catalog)), function(i) {
-    item <- catalog[i, ]
-    source <- benchmarks[[item$source]]
-    values <- source[[item$column]]
-    if (item$group == "female" && !grepl("female_only", item$column)) {
-      values <- 100 - values
-    }
-    valid <- !is.na(values)
-    data.frame(
-      source = item$source, column = item$column, role = item$role,
-      group = item$group, label = item$label,
-      first_year = min(source$year[valid]), last_year = max(source$year[valid]),
-      n_years = sum(valid), mean_pct = mean(values[valid]),
-      stringsAsFactors = FALSE
-    )
-  })
-  do.call(rbind, rows)
-}
-
-matched_benchmarks <- function(benchmarks, episodes) {
+pooled_benchmarks <- function(benchmarks, episodes) {
   catalog <- benchmark_catalog()
   catalog <- catalog[!catalog$source %in% c("census", "nyc"), ]
-  years_by_show <- split(episodes$year, episodes$series)
-  rows <- lapply(names(years_by_show), function(series) {
-    show_years <- sort(unique(years_by_show[[series]]))
-    do.call(rbind, lapply(seq_len(nrow(catalog)), function(i) {
-      item <- catalog[i, ]
-      source <- item$source
-      available <- switch(source,
-        ncvs = benchmarks$ncvs_records$year,
-        ncvs_hispanic = benchmarks$ncvs_records$year,
-        ucr = benchmarks$ucr_counts$year,
-        ucr_hispanic = benchmarks$ucr_counts$year[!is.na(benchmarks$ucr_counts$hispanic)],
-        murder_victims = benchmarks$murder_victim_counts$year
-      )
-      years <- intersect(show_years, unique(available))
-      if (length(years) == 0L) return(NULL)
-      if (source %in% c("ncvs", "ncvs_hispanic")) {
-        offense <- if (grepl("rape", item$column)) {
-          "rape_sexual_assault"
-        } else if (grepl("aggravated", item$column)) {
-          "aggravated_assault"
-        } else {
-          "serious_violent"
-        }
-        group <- if (grepl("offender_female_only", item$column)) {
-          "offender_female_only"
-        } else if (item$group == "female") {
-          "victim_female"
-        } else {
-          paste0("victim_", if (item$group == "black") "nh_black" else "hispanic")
-        }
-        value <- ncvs_share(benchmarks$ncvs_records, years, offense, group)$share_pct
+  show_years <- sort(unique(episodes$year))
+  rows <- lapply(seq_len(nrow(catalog)), function(i) {
+    item <- catalog[i, ]
+    source <- item$source
+    available <- switch(source,
+      ncvs = benchmarks$ncvs_records$year,
+      ncvs_hispanic = benchmarks$ncvs_records$year,
+      ucr = benchmarks$ucr_counts$year,
+      ucr_hispanic = benchmarks$ucr_counts$year[!is.na(benchmarks$ucr_counts$hispanic)],
+      murder_victims = benchmarks$murder_victim_counts$year
+    )
+    years <- intersect(show_years, unique(available))
+    if (length(years) == 0L) return(NULL)
+    if (source %in% c("ncvs", "ncvs_hispanic")) {
+      offense <- if (grepl("rape", item$column)) {
+        "rape_sexual_assault"
+      } else if (grepl("aggravated", item$column)) {
+        "aggravated_assault"
       } else {
-        counts <- if (source == "murder_victims") {
-          benchmarks$murder_victim_counts
-        } else {
-          offense <- if (grepl("all_crime", item$column)) {
-            "all"
-          } else if (grepl("violent_crime", item$column)) {
-            "violent"
-          } else if (grepl("homicides", item$column)) {
-            "homicide"
-          } else if (grepl("rape", item$column)) {
-            "rape"
-          } else {
-            "assault"
-          }
-          benchmarks$ucr_counts[benchmarks$ucr_counts$offense == offense, ]
-        }
-        value <- pool_count_share(counts, years, item$group)
+        "serious_violent"
       }
-      data.frame(
-        series = series, source = source, column = item$column,
-        role = item$role, group = item$group, label = item$label,
-        first_year = min(years), last_year = max(years), n_years = length(years),
-        share_pct = value
-      )
-    }))
+      group <- if (grepl("offender_female_only", item$column)) {
+        "offender_female_only"
+      } else if (item$group == "female") {
+        "victim_female"
+      } else {
+        paste0("victim_", if (item$group == "black") "nh_black" else "hispanic")
+      }
+      value <- ncvs_share(benchmarks$ncvs_records, years, offense, group)$share_pct
+    } else {
+      counts <- if (source == "murder_victims") {
+        benchmarks$murder_victim_counts
+      } else {
+        offense <- if (grepl("all_crime", item$column)) {
+          "all"
+        } else if (grepl("violent_crime", item$column)) {
+          "violent"
+        } else if (grepl("homicides", item$column)) {
+          "homicide"
+        } else if (grepl("rape", item$column)) {
+          "rape"
+        } else {
+          "assault"
+        }
+        benchmarks$ucr_counts[benchmarks$ucr_counts$offense == offense, ]
+      }
+      value <- pool_count_share(counts, years, item$group)
+    }
+    data.frame(
+      source = source, column = item$column,
+      role = item$role, group = item$group, label = item$label,
+      first_year = min(years), last_year = max(years), n_years = length(years),
+      share_pct = value
+    )
   })
   do.call(rbind, rows)
 }
