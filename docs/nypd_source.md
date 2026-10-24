@@ -13,4 +13,4 @@ The pipeline reads the reported Black and Hispanic percentages and the correspon
 
 These are shares among NYPD records with known race/ethnicity. Suspects are not arrestees or distinct offenders, and the offense-specific NYPD shares do not describe the crime mix of all coded characters. The workbooks remain pinned in [`source_manifest.csv`](source_manifest.csv); this change uses no newer NYPD data.
 
-These archived enforcement tables report race/ethnicity but do not report victim or suspect sex. Female NYPD comparisons would require a separate incident-level NYPD source with its own coverage and denominator checks.
+These archived enforcement tables report race/ethnicity but do not report victim or suspect sex. The separate [NYPD rape arrest reference](ny_arrests_source.md) provides one checked female comparison from incident-level arrests.

@@ -14,14 +14,16 @@ annual_table <- function(yearly, benchmarks, catalog, role, group) {
   selected <- catalog[
     (catalog$role == role | catalog$role == "population") & catalog$group == group,
   ]
-  source_order <- c("ncvs", "ncvs_hispanic", "murder_victims", "ucr", "nyc", "census")
+  source_order <- c("ncvs", "ncvs_hispanic", "murder_victims", "ucr", "nyc", "nyc_arrests", "census")
   selected <- selected[order(match(selected$source, source_order)), ]
   for (i in seq_len(nrow(selected))) {
     item <- selected[i, ]
     source <- benchmarks[[item$source]]
     key <- item$label
     values <- source[[item$column]]
-    if (group == "female" && !grepl("female_only", item$column)) values <- 100 - values
+    if (group == "female" && !grepl("female_only", item$column) && item$source != "nyc_arrests") {
+      values <- 100 - values
+    }
     table[[key]] <- values[match(years, source$year)]
   }
   table
@@ -83,7 +85,11 @@ write_latex_table <- function(table, path, caption, label, role, group) {
         ""
       },
       "UCR: arrests;",
-      if ("NYPD" %in% sources) "NYPD: suspects." else ""
+      if ("NYPD" %in% sources) {
+        if (group == "female") "NYPD: rape arrests." else "NYPD: suspects."
+      } else {
+        ""
+      }
     )
   }
   race_note <- if (group == "black") {

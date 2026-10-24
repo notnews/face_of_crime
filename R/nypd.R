@@ -51,3 +51,32 @@ pool_nypd_share <- function(counts, years, offense, role, group) {
   stopifnot(nrow(selected) > 0L)
   50 * sum(selected$count_min + selected$count_max) / sum(selected$known_total)
 }
+
+read_nypd_rape_arrests <- function(path) {
+  counts <- utils::read.csv(path)
+  stopifnot(
+    identical(names(counts), c("year", "perp_sex", "n")),
+    identical(sort(unique(counts$year)), 2008:2015),
+    identical(sort(unique(counts$perp_sex)), c("F", "M")),
+    nrow(counts) == 16L,
+    !anyDuplicated(counts[c("year", "perp_sex")]),
+    all(counts$n > 0L)
+  )
+  counts
+}
+
+pool_nypd_rape_arrests <- function(counts, years) {
+  selected <- counts[counts$year %in% years, ]
+  stopifnot(nrow(selected) == 2L * length(years))
+  100 * sum(selected$n[selected$perp_sex == "F"]) / sum(selected$n)
+}
+
+nypd_rape_arrest_annual_shares <- function(counts) {
+  years <- sort(unique(counts$year))
+  data.frame(
+    year = years,
+    rape_female_arrests = vapply(years, function(year) {
+      pool_nypd_rape_arrests(counts, year)
+    }, numeric(1))
+  )
+}

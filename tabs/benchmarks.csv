@@ -32,3 +32,4 @@
 "nyc","rapes_hispanic_victim","victim","hispanic","NYPD rape victims",2008,2015,8,37.2902780969892
 "nyc","homicides_hispanic_suspect","criminal","hispanic","NYPD homicide suspects",2008,2015,8,32.4040404040404
 "nyc","rapes_hispanic_suspect","criminal","hispanic","NYPD rape suspects",2008,2015,8,34.9339006230056
+"nyc_arrests","rape_female_arrests","criminal","female","NYPD rape arrests",2008,2015,8,2.27306939635707

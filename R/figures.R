@@ -43,7 +43,7 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
         "NCVS dots pool weighted victimizations (survey estimates; SEs not shown); UCR dots pool murder victims."
       },
       if (group %in% c("black", "hispanic")) {
-        "NYPD dots pool victims with known race/ethnicity (2008–2015)."
+        "NYPD dots pool victims with known race/ethnicity (2008-2015)."
       } else {
         ""
       },
@@ -59,7 +59,8 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
     )
   } else if (group == "female") {
     paste(
-      "Colored dots pool classified criminal characters. UCR dots pool arrests.",
+      "Colored dots pool classified criminal characters. UCR and NYPD dots pool arrests.",
+      "NYPD rape arrests cover 2008-2015.",
       "NCVS: serious-violence incidents with victim-reported female-only offenders",
       "among known-sex incidents (SEs not shown);",
       "mixed-sex groups remain in the denominator.",

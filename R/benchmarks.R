@@ -15,6 +15,9 @@ read_benchmarks <- function(reference_dir) {
   ucr_counts <- read_ucr_arrest_counts(file.path(reference_dir, "ucr", "race_gender_criminals.xlsx"))
   murder_victim_counts <- read_ucr_murder_victim_counts(file.path(reference_dir, "ucr", "Murder victim data.xlsx"))
   nypd_counts <- read_nypd_race_counts(file.path(reference_dir, "ny_enforcement"))
+  nypd_rape_arrests <- read_nypd_rape_arrests(file.path(
+    reference_dir, "ny_arrests", "rape_arrests_by_sex_2008_2015.csv"
+  ))
   census <- read_percent_table(file.path(reference_dir, "census", "census.csv"))
   names(census) <- c(
     "year", "white_us", "black_us", "men_us", "white_ny",
@@ -29,6 +32,8 @@ read_benchmarks <- function(reference_dir) {
     ucr_counts = ucr_counts,
     murder_victim_counts = murder_victim_counts,
     nypd_counts = nypd_counts,
+    nypd_rape_arrests = nypd_rape_arrests,
+    nyc_arrests = nypd_rape_arrest_annual_shares(nypd_rape_arrests),
     ucr = ucr_annual_shares(ucr_counts),
     ucr_hispanic = read_percent_table(file.path(reference_dir, "ucr", "race_gender_criminals_hispanic.csv")),
     murder_victims = murder_victim_annual_shares(murder_victim_counts),
@@ -102,6 +107,10 @@ benchmark_catalog <- function() {
         "NYPD homicide victims", "NYPD rape victims",
         "NYPD homicide suspects", "NYPD rape suspects"
       )
+    ),
+    data.frame(
+      source = "nyc_arrests", column = "rape_female_arrests",
+      role = "criminal", group = "female", label = "NYPD rape arrests"
     )
   )
 }
@@ -119,7 +128,8 @@ pooled_benchmarks <- function(benchmarks, episodes) {
       ucr = benchmarks$ucr_counts$year,
       ucr_hispanic = benchmarks$ucr_counts$year[!is.na(benchmarks$ucr_counts$hispanic)],
       murder_victims = benchmarks$murder_victim_counts$year,
-      nyc = benchmarks$nypd_counts$year
+      nyc = benchmarks$nypd_counts$year,
+      nyc_arrests = benchmarks$nypd_rape_arrests$year
     )
     years <- intersect(show_years, unique(available))
     if (length(years) == 0L) {
@@ -145,6 +155,8 @@ pooled_benchmarks <- function(benchmarks, episodes) {
       offense <- if (grepl("homicides", item$column)) "homicide" else "rape"
       nypd_role <- if (item$role == "victim") "victim" else "suspect"
       value <- pool_nypd_share(benchmarks$nypd_counts, years, offense, nypd_role, item$group)
+    } else if (source == "nyc_arrests") {
+      value <- pool_nypd_rape_arrests(benchmarks$nypd_rape_arrests, years)
     } else {
       counts <- if (source == "murder_victims") {
         benchmarks$murder_victim_counts
