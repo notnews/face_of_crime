@@ -42,9 +42,19 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
       } else {
         "NCVS dots pool weighted victimizations (survey estimates; SEs not shown); UCR dots pool murder victims."
       },
-      if (group == "black") "NYPD dots pool victims with known race/ethnicity (2008–2015)." else "",
+      if (group %in% c("black", "hispanic")) {
+        "NYPD dots pool victims with known race/ethnicity (2008–2015)."
+      } else {
+        ""
+      },
       "Each gray reference dot pools available years in which any coded episode aired.",
-      if (group == "black") "NCVS and NYPD Black exclude Hispanics; UCR Black includes Hispanics." else "",
+      if (group == "black") {
+        "NCVS and NYPD Black exclude Hispanics; UCR Black includes Hispanics."
+      } else if (group == "hispanic") {
+        "NYPD Hispanic is a separate race/ethnicity category."
+      } else {
+        ""
+      },
       sep = "\n"
     )
   } else if (group == "female") {
@@ -58,7 +68,7 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
     )
   } else {
     paste(
-      if (group == "black") {
+      if (group %in% c("black", "hispanic")) {
         paste0(
           "Colored dots pool classified criminal characters. UCR dots pool arrests; ",
           "NYPD dots pool suspects with known race/ethnicity."
@@ -68,7 +78,10 @@ plot_aggregate_share <- function(shares, benchmarks, role, group) {
       },
       "Each gray reference dot pools available years in which any coded episode aired.",
       if (group == "hispanic") {
-        "UCR ethnicity counts begin in 2013 and cover arrests with reported ethnicity."
+        paste(
+          "UCR ethnicity counts begin in 2013 and cover arrests with reported ethnicity.",
+          "NYPD Hispanic is a separate race/ethnicity category."
+        )
       } else {
         "NYPD Black excludes Hispanics; UCR Black includes Hispanics."
       },

@@ -28,3 +28,7 @@
 "ucr_hispanic","homicides_perc_hispanic","criminal","hispanic","UCR homicide arrests",2013,2015,3,21.3276916919206
 "ucr_hispanic","rape_perc_hispanic","criminal","hispanic","UCR rape arrests",2013,2015,3,25.2157686027525
 "ncvs","serious_violent_offender_female_only","criminal","female","NCVS female-only offender incidents",1999,2014,16,12.4447529245606
+"nyc","homicides_hispanic_victim","victim","hispanic","NYPD homicide victims",2008,2015,8,26.3913824057451
+"nyc","rapes_hispanic_victim","victim","hispanic","NYPD rape victims",2008,2015,8,37.2902780969892
+"nyc","homicides_hispanic_suspect","criminal","hispanic","NYPD homicide suspects",2008,2015,8,32.4040404040404
+"nyc","rapes_hispanic_suspect","criminal","hispanic","NYPD rape suspects",2008,2015,8,34.9339006230056

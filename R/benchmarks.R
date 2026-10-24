@@ -84,10 +84,26 @@ benchmark_catalog <- function() {
     ),
     stringsAsFactors = FALSE
   )
-  rbind(catalog, data.frame(
-    source = "ncvs", column = "serious_violent_offender_female_only",
-    role = "criminal", group = "female", label = "NCVS female-only offender incidents"
-  ))
+  rbind(
+    catalog,
+    data.frame(
+      source = "ncvs", column = "serious_violent_offender_female_only",
+      role = "criminal", group = "female", label = "NCVS female-only offender incidents"
+    ),
+    data.frame(
+      source = "nyc",
+      column = c(
+        "homicides_hispanic_victim", "rapes_hispanic_victim",
+        "homicides_hispanic_suspect", "rapes_hispanic_suspect"
+      ),
+      role = c("victim", "victim", "criminal", "criminal"),
+      group = "hispanic",
+      label = c(
+        "NYPD homicide victims", "NYPD rape victims",
+        "NYPD homicide suspects", "NYPD rape suspects"
+      )
+    )
+  )
 }
 
 pooled_benchmarks <- function(benchmarks, episodes) {
@@ -106,7 +122,9 @@ pooled_benchmarks <- function(benchmarks, episodes) {
       nyc = benchmarks$nypd_counts$year
     )
     years <- intersect(show_years, unique(available))
-    if (length(years) == 0L) return(NULL)
+    if (length(years) == 0L) {
+      return(NULL)
+    }
     if (source %in% c("ncvs", "ncvs_hispanic")) {
       offense <- if (grepl("rape", item$column)) {
         "rape_sexual_assault"
@@ -126,7 +144,7 @@ pooled_benchmarks <- function(benchmarks, episodes) {
     } else if (source == "nyc") {
       offense <- if (grepl("homicides", item$column)) "homicide" else "rape"
       nypd_role <- if (item$role == "victim") "victim" else "suspect"
-      value <- pool_nypd_share(benchmarks$nypd_counts, years, offense, nypd_role)
+      value <- pool_nypd_share(benchmarks$nypd_counts, years, offense, nypd_role, item$group)
     } else {
       counts <- if (source == "murder_victims") {
         benchmarks$murder_victim_counts
