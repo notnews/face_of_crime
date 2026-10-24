@@ -1,6 +1,4 @@
-share_rows <- function(rows, crime_group, by_year = FALSE) {
-  if (crime_group == "murder") rows <- rows[rows$is_murder, ]
-  if (crime_group == "rape") rows <- rows[rows$is_rape, ]
+share_rows <- function(rows, by_year = FALSE) {
   keys <- if (by_year) c("series", "year") else "series"
   partitions <- split(rows, interaction(rows[keys], drop = TRUE, lex.order = TRUE))
 
@@ -19,7 +17,7 @@ share_rows <- function(rows, crime_group, by_year = FALSE) {
         total <- sum(counts)
         values[[paste(role, dimension, sep = "_")]] <- data.frame(
           series = part$series[1], year = if (by_year) part$year[1] else NA_integer_,
-          crime_group = crime_group, role = role, dimension = dimension,
+          crime_group = "all", role = role, dimension = dimension,
           group = groups, episode_n = nrow(part), count = as.numeric(counts),
           known_total = total,
           share_pct = if (total > 0) 100 * counts / total else NA_real_,
@@ -35,10 +33,7 @@ share_rows <- function(rows, crime_group, by_year = FALSE) {
 }
 
 estimate_shares <- function(episodes) {
-  aggregate <- do.call(rbind, lapply(c("all", "murder", "rape"), function(group) {
-    share_rows(episodes, group)
-  }))
-  yearly <- share_rows(episodes, "all", by_year = TRUE)
-  rownames(aggregate) <- NULL
+  aggregate <- share_rows(episodes)
+  yearly <- share_rows(episodes, by_year = TRUE)
   list(aggregate = aggregate, yearly = yearly)
 }

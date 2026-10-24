@@ -30,14 +30,14 @@ read_benchmarks <- function(reference_dir) {
 benchmark_catalog <- function() {
   data.frame(
     source = c(
-      rep("ncvs", 6), rep("murder_victims", 2), rep("ucr", 10),
+      rep("ncvs", 3), rep("ncvs_hispanic", 3), rep("murder_victims", 2), rep("ucr", 10),
       rep("nyc", 4), rep("census", 4), rep("ncvs_hispanic", 2),
       rep("ucr_hispanic", 3)
     ),
     column = c(
       "serious_violent_victimization_male", "rape_sexual_assault_male",
-      "aggravated_assault_male", "serious_violent_victimization_black",
-      "rape_sexual_assault_black", "aggravated_assault_black",
+      "aggravated_assault_male", "serious_violent_victimization_nh_black",
+      "rape_nh_black", "aggravated_assault_nh_black",
       "murder_victim_men", "murder_victim_black",
       "all_crime_perc_men", "violent_crime_perc_men", "homicides_perc_men",
       "rape_perc_men", "assault_perc_men", "all_crime_perc_black",

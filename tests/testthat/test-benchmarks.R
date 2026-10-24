@@ -13,6 +13,19 @@ testthat::test_that("historical missing markers remain missing", {
   testthat::expect_equal(nrow(benchmarks$ncvs_hispanic), 22L)
 })
 
+testthat::test_that("NCVS Black references exclude Hispanic respondents", {
+  catalog <- benchmark_catalog()
+  rows <- catalog[
+    catalog$role == "victim" & catalog$group == "black" & grepl("^NCVS", catalog$label),
+  ]
+  testthat::expect_equal(nrow(rows), 3L)
+  testthat::expect_true(all(rows$source == "ncvs_hispanic"))
+  testthat::expect_equal(
+    rows$column,
+    c("serious_violent_victimization_nh_black", "rape_nh_black", "aggravated_assault_nh_black")
+  )
+})
+
 testthat::test_that("source files match the pinned manifest", {
   testthat::expect_silent(verify_sources())
 })
