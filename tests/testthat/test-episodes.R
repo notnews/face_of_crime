@@ -9,7 +9,7 @@ testthat::test_that("coded categories parse counts without swallowing ambiguous 
 })
 
 testthat::test_that("episode inputs conserve their distinct rows", {
-  episodes <- read_episodes(raw_dir)
+  episodes <- read_episodes(episode_dir)
   testthat::expect_equal(nrow(episodes), 731L)
   counts <- as.integer(table(episodes$series)[c("Criminal Intent", "Original", "SVU")])
   testthat::expect_equal(counts, c(194L, 151L, 386L))
@@ -22,7 +22,7 @@ testthat::test_that("episode inputs conserve their distinct rows", {
 })
 
 testthat::test_that("the transposed Mushrooms labels are assigned to their proper columns", {
-  episodes <- read_episodes(raw_dir)
+  episodes <- read_episodes(episode_dir)
   row <- episodes[episodes$series == "Original" & episodes$title == "Mushrooms", ]
   testthat::expect_equal(nrow(row), 1L)
   testthat::expect_equal(c(row$victim_male, row$victim_black), c(1L, 1L))
@@ -30,7 +30,7 @@ testthat::test_that("the transposed Mushrooms labels are assigned to their prope
 })
 
 testthat::test_that("denominators use the same role as their numerators", {
-  episodes <- read_episodes(raw_dir)
+  episodes <- read_episodes(episode_dir)
   shares <- estimate_shares(episodes)
   svu <- shares$aggregate[
     shares$aggregate$series == "SVU" & shares$aggregate$crime_group == "all" &
@@ -44,7 +44,8 @@ testthat::test_that("denominators use the same role as their numerators", {
     period <- ifelse(is.na(subset$year), "all", as.character(subset$year))
     keys <- interaction(
       subset$series, period, subset$crime_group, subset$role,
-      subset$dimension, drop = TRUE
+      subset$dimension,
+      drop = TRUE
     )
     groups <- split(subset, keys)
     testthat::expect_true(all(vapply(groups, function(group) {

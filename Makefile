@@ -1,4 +1,4 @@
-.PHONY: restore analysis manuscript paper format lint test check ci-docker clean
+.PHONY: restore download prepare analysis manuscript paper format lint test check ci-docker clean
 
 restore:
 	Rscript -e 'if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv", repos = "https://cloud.r-project.org"); renv::restore(prompt = FALSE)'
@@ -6,10 +6,17 @@ restore:
 analysis:
 	Rscript scripts/99_run_all.R
 
-manuscript:
-	cd ms && latexmk -pdf -interaction=nonstopmode -halt-on-error face_of_crime.tex
+download:
+	Rscript scripts/download_sources.R
 
-paper: analysis manuscript
+prepare:
+	Rscript scripts/01_prepare_data.R
+
+manuscript:
+	cd ms && latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+
+paper: analysis
+	$(MAKE) manuscript
 
 format:
 	Rscript -e 'styler::cache_deactivate(); styler::style_dir("R"); styler::style_dir("scripts"); styler::style_dir("tests")'
@@ -26,7 +33,7 @@ ci-docker:
 	docker run --rm --platform linux/amd64 -v "$(CURDIR):/project" -w /project \
 		-v face_of_crime_renv_cache:/root/.cache/R/renv \
 		-e RENV_CONFIG_REPOS_OVERRIDE=https://packagemanager.posit.co/cran/latest \
-		rocker/verse:4.6.0 bash -c "tlmgr install latexmk appendix booktabs caption chngcntr bm fancyhdr lmodern multirow natbib pdflscape sectsty setspace subcaption && make restore check"
+		rocker/verse:4.6.0 bash -c "apt-get update && apt-get install -y libpoppler-cpp-dev && tlmgr install latexmk appendix booktabs caption chngcntr bm fancyhdr lmodern multirow natbib pdflscape sectsty setspace subcaption && make restore check"
 
 clean:
-	cd ms && latexmk -C face_of_crime.tex
+	cd ms && latexmk -C main.tex

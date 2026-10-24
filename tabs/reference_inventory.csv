@@ -1,0 +1,48 @@
+"source","column","role","group","label","first_year","last_year","n_years","share_pct","rounding_lower_pct","rounding_upper_pct"
+"ncvs","serious_violent_victimization_male","victim","female","NCVS serious violence",1999,2014,16,47.1101957931257,,
+"ncvs","rape_sexual_assault_male","victim","female","NCVS rape/sexual assault",1999,2014,16,88.7322048939458,,
+"ncvs","aggravated_assault_male","victim","female","NCVS aggravated assault",1999,2014,16,40.2335427274219,,
+"ncvs_race_ethnicity","serious_violent_victimization_nh_black","victim","black","NCVS serious violence",1999,2014,16,19.1097977406997,,
+"ncvs_race_ethnicity","rape_nh_black","victim","black","NCVS rape/sexual assault",1999,2014,16,15.006455787967,,
+"ncvs_race_ethnicity","aggravated_assault_nh_black","victim","black","NCVS aggravated assault",1999,2014,16,18.967209418248,,
+"murder_victims","murder_victim_men","victim","female","UCR murder victims",1999,2015,17,22.2963036867699,,
+"murder_victims","murder_victim_black","victim","black","UCR murder victims",1999,2015,17,48.8406997878773,,
+"ucr","all_crime_perc_men","criminal","female","UCR all arrests",1999,2015,17,24.4398436380461,,
+"ucr","violent_crime_perc_men","criminal","female","UCR violent arrests",1999,2015,17,18.5166727751253,,
+"ucr","homicides_perc_men","criminal","female","UCR homicide arrests",1999,2015,17,11.1039051869937,,
+"ucr","rape_perc_men","criminal","female","UCR rape arrests",1999,2015,17,1.46645833620132,,
+"ucr","assault_perc_men","criminal","female","UCR assault arrests",1999,2015,17,21.447886133237,,
+"ucr","all_crime_perc_black","criminal","black","UCR all arrests",1999,2015,17,27.8349044573097,,
+"ucr","violent_crime_perc_black","criminal","black","UCR violent arrests",1999,2015,17,38.2237638820436,,
+"ucr","homicides_perc_black","criminal","black","UCR homicide arrests",1999,2015,17,49.791924633315,,
+"ucr","rape_perc_black","criminal","black","UCR rape arrests",1999,2015,17,32.6839699516611,,
+"ucr","assault_perc_black","criminal","black","UCR assault arrests",1999,2015,17,33.7434679264044,,
+"nypd_enforcement","homicides_black_victim","victim","black","NYPD homicide victims",2008,2015,8,62.2381807301017,62.2381807301017,62.2381807301017
+"nypd_enforcement","rapes_black_victim","victim","black","NYPD rape victims",2008,2015,8,39.5253964605838,39.5196506550218,39.5311422661457
+"nypd_enforcement","homicides_black_suspect","criminal","black","NYPD homicide suspects",2008,2015,8,58.6666666666667,58.6666666666667,58.6666666666667
+"nypd_enforcement","rapes_black_suspect","criminal","black","NYPD rape suspects",2008,2015,8,51.2688041331105,51.2688041331105,51.2688041331105
+"ncvs_race_ethnicity","rape_hispanic","victim","hispanic","NCVS rape/sexual assault",1999,2014,16,10.1634616694196,,
+"ncvs_race_ethnicity","serious_violent_victimization_hispanic","victim","hispanic","NCVS serious violence",1999,2014,16,14.1881930403684,,
+"ncvs_race_ethnicity","aggravated_assault_hispanic","victim","hispanic","NCVS aggravated assault",1999,2014,16,13.0629706577743,,
+"ucr_hispanic","all_crime_perc_hispanic","criminal","hispanic","UCR all arrests",2013,2015,3,18.0947401680231,,
+"ucr_hispanic","homicides_perc_hispanic","criminal","hispanic","UCR homicide arrests",2013,2015,3,21.3276916919206,,
+"ucr_hispanic","rape_perc_hispanic","criminal","hispanic","UCR rape arrests",2013,2015,3,25.2157686027525,,
+"ncvs","serious_violent_offender_female_only","criminal","female","NCVS female-only offender incidents",1999,2014,16,12.4447529245606,,
+"nypd_enforcement","homicides_hispanic_victim","victim","hispanic","NYPD homicide victims",2008,2015,8,26.3913824057451,26.3913824057451,26.3913824057451
+"nypd_enforcement","rapes_hispanic_victim","victim","hispanic","NYPD rape victims",2008,2015,8,37.2902780969892,37.2902780969892,37.2902780969892
+"nypd_enforcement","homicides_hispanic_suspect","criminal","hispanic","NYPD homicide suspects",2008,2015,8,32.4040404040404,32.4040404040404,32.4040404040404
+"nypd_enforcement","rapes_hispanic_suspect","criminal","hispanic","NYPD rape suspects",2008,2015,8,34.9339006230056,34.9339006230056,34.9339006230056
+"nypd_arrests","rape_female_arrests","criminal","female","NYPD rape arrests",2008,2015,8,2.27306939635707,,
+"nypd_homicide","homicide_female_victim","victim","female","NYPD homicide victims (2010-2012)",2010,2012,3,17.7551020408163,17.3469387755102,18.1632653061224
+"nypd_homicide","homicide_female_suspect","criminal","female","NYPD homicide suspects (2011-2012)",2011,2012,2,8.06938159879336,7.69230769230769,8.44645550527903
+"ucr_hispanic","violent_perc_hispanic","criminal","hispanic","UCR violent arrests",2013,2015,3,23.7769595556247,,
+"ucr_hispanic","assault_perc_hispanic","criminal","hispanic","UCR assault arrests",2013,2015,3,24.6130666613747,,
+"nypd_enforcement","robbery_black_victim","victim","black","NYPD robbery victims",2008,2015,8,31.9963184474523,31.9494436612972,32.0431932336075
+"nypd_enforcement","robbery_hispanic_victim","victim","hispanic","NYPD robbery victims",2008,2015,8,37.4242133931871,37.3773386070319,37.4710881793422
+"nypd_enforcement","robbery_black_suspect","criminal","black","NYPD robbery suspects",2008,2015,8,70.5959325240423,70.5483209837616,70.6435440643229
+"nypd_enforcement","robbery_hispanic_suspect","criminal","hispanic","NYPD robbery suspects",2008,2015,8,23.751852435756,23.7042408954753,23.7994639760366
+"nypd_enforcement","assault_black_victim","victim","black","NYPD felonious assault victims",2008,2015,8,47.0515148982089,47.0047798895078,47.0982499069099
+"nypd_enforcement","assault_hispanic_victim","victim","hispanic","NYPD felonious assault victims",2008,2015,8,34.1199759865646,34.0732409778636,34.1667109952657
+"nypd_enforcement","assault_black_suspect","criminal","black","NYPD felonious assault suspects",2008,2015,8,54.7562000840689,54.7106627434496,54.8017374246882
+"nypd_enforcement","assault_hispanic_suspect","criminal","hispanic","NYPD felonious assault suspects",2008,2015,8,32.0260613703237,31.9812246041754,32.0708981364719
+"nypd_homicide","homicide_female_arrestee","criminal","female","NYPD homicide arrestees",2010,2010,1,10,9.82456140350877,10.1754385964912

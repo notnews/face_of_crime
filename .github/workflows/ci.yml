@@ -17,12 +17,12 @@ jobs:
       - name: Install LaTeX
         run: |
           sudo apt-get update
-          sudo apt-get install -y latexmk lmodern texlive-fonts-recommended texlive-latex-recommended texlive-latex-extra
+          sudo apt-get install -y libpoppler-cpp-dev latexmk lmodern texlive-fonts-recommended texlive-latex-recommended texlive-latex-extra
       - uses: r-lib/actions/setup-renv@v2
       - name: Rebuild and check
         run: make check
       - uses: actions/upload-artifact@v7.0.2
         with:
           name: face-of-crime-paper
-          path: ms/face_of_crime.pdf
-          if-no-files-found: warn
+          path: ms/main.pdf
+          if-no-files-found: error

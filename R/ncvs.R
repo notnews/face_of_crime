@@ -99,14 +99,14 @@ ncvs_annual_shares <- function(records) {
     aggravated_assault = "aggravated_assault", simple_assault = "simple_assault",
     larceny = "personal_larceny"
   )
-  ncvs_hispanic <- data.frame(year = ncvs$year)
+  ncvs_race_ethnicity <- data.frame(year = ncvs$year)
   for (offense_name in names(offenses)) {
     for (group_name in names(groups)) {
       name <- paste(offense_name, group_name, sep = "_")
-      ncvs_hispanic[[name]] <- vapply(ncvs$year, function(year) {
+      ncvs_race_ethnicity[[name]] <- vapply(ncvs$year, function(year) {
         ncvs_share(records, year, offenses[[offense_name]], groups[[group_name]])$share_pct
       }, numeric(1))
     }
   }
-  list(ncvs = ncvs, ncvs_hispanic = ncvs_hispanic)
+  list(ncvs = ncvs, ncvs_race_ethnicity = ncvs_race_ethnicity)
 }

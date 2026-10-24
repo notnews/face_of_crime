@@ -1,17 +1,18 @@
-testthat::test_that("main figures show three coded series and one dot per reference", {
-  episodes <- read_episodes(raw_dir)
-  sources <- read_benchmarks(reference_dir)
+testthat::test_that("main figures give each coded series and reference its own row", {
+  episodes <- read_episodes(episode_dir)
+  sources <- read_benchmarks(raw_dir)
   shares <- estimate_shares(episodes)$aggregate
   benchmarks <- pooled_benchmarks(sources, episodes)
 
   for (role in c("victim", "criminal")) {
     for (group in c("female", "black", "hispanic")) {
       plot <- plot_aggregate_share(shares, benchmarks, role, group)
-      show <- plot$data[as.character(plot$data$entity) == "Coded Episodes", ]
-      reference <- plot$data[as.character(plot$data$legend) == "Historical Reference", ]
+      show <- plot$data[as.character(plot$data$legend) != "Reference", ]
+      reference <- plot$data[as.character(plot$data$legend) == "Reference", ]
       expected <- shares[shares$role == role & shares$group == group, ]
       expected_reference <- benchmarks[benchmarks$role == role & benchmarks$group == group, ]
       testthat::expect_equal(nrow(show), 3L)
+      testthat::expect_equal(as.character(show$entity), expected$series)
       testthat::expect_equal(as.character(show$legend), expected$series)
       testthat::expect_equal(show$share_pct, expected$share_pct)
       testthat::expect_equal(nrow(reference), nrow(expected_reference))
@@ -22,11 +23,11 @@ testthat::test_that("main figures show three coded series and one dot per refere
 })
 
 testthat::test_that("common reference pools only years with a coded episode", {
-  episodes <- read_episodes(raw_dir)
-  sources <- read_benchmarks(reference_dir)
+  episodes <- read_episodes(episode_dir)
+  sources <- read_benchmarks(raw_dir)
   benchmarks <- pooled_benchmarks(sources, episodes)
   black <- benchmarks[
-    benchmarks$source == "ncvs_hispanic" &
+    benchmarks$source == "ncvs_race_ethnicity" &
       benchmarks$column == "serious_violent_victimization_nh_black",
   ]
   expected <- ncvs_share(sources$ncvs_records, 1999:2014, "serious_violent", "victim_nh_black")
@@ -45,21 +46,51 @@ testthat::test_that("common reference pools only years with a coded episode", {
   counts <- sources$ucr_counts[sources$ucr_counts$offense == "violent", ]
   testthat::expect_equal(ucr$share_pct, pool_count_share(counts, 1999:2015, "black"))
   testthat::expect_equal(ucr$n_years, 17L)
+
+  hispanic_assault <- benchmarks[
+    benchmarks$role == "victim" & benchmarks$group == "hispanic" &
+      benchmarks$column == "aggravated_assault_hispanic",
+  ]
+  testthat::expect_equal(nrow(hispanic_assault), 1L)
+  testthat::expect_equal(
+    hispanic_assault$share_pct,
+    ncvs_share(sources$ncvs_records, 1999:2014, "aggravated_assault", "victim_hispanic")$share_pct
+  )
 })
 
 testthat::test_that("manuscript macro matches the single plotted NCVS reference", {
-  episodes <- read_episodes(raw_dir)
-  sources <- read_benchmarks(reference_dir)
+  episodes <- read_episodes(episode_dir)
+  sources <- read_benchmarks(raw_dir)
   shares <- estimate_shares(episodes)$aggregate
   benchmarks <- pooled_benchmarks(sources, episodes)
   path <- tempfile(fileext = ".tex")
   write_macros(shares, benchmarks, episodes, path)
   macros <- readLines(path)
   value <- benchmarks$share_pct[
-    benchmarks$source == "ncvs_hispanic" &
+    benchmarks$source == "ncvs_race_ethnicity" &
       benchmarks$column == "serious_violent_victimization_nh_black"
   ]
   testthat::expect_true(
     sprintf("\\newcommand{\\NcvsSeriousBlackPct}{%.1f}", value) %in% macros
   )
+})
+
+testthat::test_that("SI reference lines match the annual reference columns in the tables", {
+  episodes <- read_episodes(episode_dir)
+  sources <- read_benchmarks(raw_dir)
+  yearly <- estimate_shares(episodes)$yearly
+  for (role in c("victim", "criminal")) {
+    for (group in c("black", "female")) {
+      years <- unique(yearly$year[yearly$role == role & yearly$group == group])
+      reference <- yearly_reference(sources, years, role, group)
+      annual <- annual_table(yearly, sources, benchmark_catalog(), role, group)
+      column <- if (role == "victim") "NCVS serious violence" else "UCR violent arrests"
+      available <- !is.na(annual[[column]])
+      testthat::expect_equal(reference$year, annual$Year[available])
+      testthat::expect_equal(reference$share_pct, annual[[column]][available])
+      testthat::expect_equal(
+        range(reference$year), if (role == "victim") c(1999L, 2014L) else c(1999L, 2015L)
+      )
+    }
+  }
 })

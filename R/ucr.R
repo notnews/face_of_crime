@@ -4,7 +4,8 @@ read_ucr_arrest_counts <- function(path) {
   offenses <- c(all = 3L, homicide = 4L, rape = 5L, assault = 7L, violent = 12L)
   rows <- lapply(years, function(year) {
     sheet <- as.data.frame(readxl::read_excel(
-      path, sheet = as.character(year), col_names = FALSE, col_types = "text",
+      path,
+      sheet = as.character(year), col_names = FALSE, col_types = "text",
       .name_repair = "minimal", n_max = 12
     ))
     stopifnot(grepl("TOTAL", sheet[3, 1], fixed = TRUE))
@@ -12,8 +13,11 @@ read_ucr_arrest_counts <- function(path) {
     do.call(rbind, lapply(names(offenses), function(offense) {
       row <- offenses[[offense]]
       expected <- switch(offense,
-        all = "TOTAL", homicide = "Murder", rape = "rape",
-        assault = "Aggravated assault", violent = "Violent crime"
+        all = "TOTAL",
+        homicide = "Murder",
+        rape = "rape",
+        assault = "Aggravated assault",
+        violent = "Violent crime"
       )
       stopifnot(grepl(expected, sheet[row, 1], ignore.case = TRUE))
       race_total <- as.numeric(sheet[row, 2])
@@ -43,7 +47,8 @@ read_ucr_murder_victim_counts <- function(path) {
   stopifnot(all(as.character(years) %in% readxl::excel_sheets(path)))
   rows <- lapply(years, function(year) {
     sheet <- as.data.frame(readxl::read_excel(
-      path, sheet = as.character(year), col_names = FALSE, col_types = "text",
+      path,
+      sheet = as.character(year), col_names = FALSE, col_types = "text",
       .name_repair = "minimal", n_max = 10
     ))
     stopifnot(
@@ -67,7 +72,9 @@ pool_count_share <- function(counts, years, group) {
   part <- part[!is.na(part[[group]]), ]
   stopifnot(nrow(part) > 0L)
   denominator <- switch(group,
-    black = "race_total", female = "sex_total", hispanic = "ethnicity_total"
+    black = "race_total",
+    female = "sex_total",
+    hispanic = "ethnicity_total"
   )
   100 * sum(part[[group]]) / sum(part[[denominator]])
 }
@@ -83,6 +90,7 @@ ucr_annual_shares <- function(counts) {
     prefix <- paste0(labels[[offense]], "_perc_")
     result[[paste0(prefix, "black")]] <- 100 * part$black / part$race_total
     result[[paste0(prefix, "men")]] <- 100 * (part$sex_total - part$female) / part$sex_total
+    result[[paste0(prefix, "hispanic")]] <- 100 * part$hispanic / part$ethnicity_total
   }
   result
 }

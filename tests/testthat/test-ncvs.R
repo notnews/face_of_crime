@@ -1,9 +1,12 @@
 testthat::test_that("BJS records reproduce historical NCVS annual shares", {
-  records <- read_ncvs_records(file.path(reference_dir, "ncvs", "personal_victimizations_1993_2014.csv"))
+  records <- read_ncvs_records(file.path(raw_dir, "ncvs", "personal_victimizations.csv"))
   annual <- ncvs_annual_shares(records)
 
-  for (source in c("ncvs", "ncvs_hispanic")) {
-    legacy <- read_percent_table(file.path(reference_dir, "ncvs", paste0(source, ".csv")))
+  for (source in c("ncvs", "ncvs_race_ethnicity")) {
+    legacy <- read_percent_table(file.path(
+      reference_dir, "ncvs",
+      if (source == "ncvs") "annual_shares.csv" else "annual_race_ethnicity_shares.csv"
+    ))
     names(legacy) <- sub("^assault_", "simple_assault_", names(legacy))
     names(legacy)[names(legacy) == "violent_cictimization_nh_other"] <-
       "violent_victimization_nh_other"
@@ -16,7 +19,7 @@ testthat::test_that("BJS records reproduce historical NCVS annual shares", {
 })
 
 testthat::test_that("pooled NCVS shares use victimization weights", {
-  records <- read_ncvs_records(file.path(reference_dir, "ncvs", "personal_victimizations_1993_2014.csv"))
+  records <- read_ncvs_records(file.path(raw_dir, "ncvs", "personal_victimizations.csv"))
   black_2010 <- ncvs_share(records, 2010L, "serious_violent", "victim_nh_black")
   testthat::expect_equal(round(black_2010$share_pct, 1), 18.6)
 
@@ -31,7 +34,7 @@ testthat::test_that("pooled NCVS shares use victimization weights", {
 })
 
 testthat::test_that("NCVS offender sex describes known-sex incidents", {
-  records <- read_ncvs_records(file.path(reference_dir, "ncvs", "personal_victimizations_1993_2014.csv"))
+  records <- read_ncvs_records(file.path(raw_dir, "ncvs", "personal_victimizations.csv"))
   female <- ncvs_share(records, 2010L, "serious_violent", "offender_female_only")
   all_incidents <- ncvs_share(records, 2010L, "serious_violent", "victim_female")
   testthat::expect_gt(all_incidents$denominator, female$denominator)
